@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/radius-shadow.css">
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/gradients.css">
+  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/styles.css">
+  <script src="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/_ds_bundle.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body{margin:0;background:var(--surface-page);}
+    a{color:var(--text-link);text-decoration:none;}
+    a:hover{color:var(--text-link-hover);}
+    * { box-sizing: border-box; }
+  </style>
+</helmet>
+<div style="min-height:100vh;background:var(--surface-page);font-family:var(--font-ui);color:var(--text-primary);">
+
+  <header style="position:sticky;top:0;z-index:10;background:var(--cream-0);border-bottom:1px solid var(--border-subtle);">
+    <div style="max-width:720px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+      <img src="assets/tabisim-logo.png" alt="TabiSIM" style="height:44px;width:auto;">
+      <div style="display:flex;align-items:center;gap:8px;">
+      <div style="position:relative;">
+        <button onClick="{{ toggleLangMenu }}" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border-default);background:var(--surface-card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);">
+          <i data-lucide="globe" style="width:18px;height:18px;"></i>
+        </button>
+        <sc-if value="{{ langMenuOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:calc(100% + 8px);right:0;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-md);overflow:hidden;min-width:140px;z-index:20;">
+            <sc-for list="{{ langs }}" as="l" hint-placeholder-count="4">
+              <div onClick="{{ l.onSelect }}" style="{{ l.menuStyle }}">{{ l.label }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+        <div style="position:relative;">
+          <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border-default);background:var(--surface-card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);">
+            <i data-lucide="menu" style="width:18px;height:18px;"></i>
+          </button>
+          <sc-if value="{{ navMenuOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:calc(100% + 8px);right:0;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-md);overflow:hidden;min-width:240px;z-index:20;padding:6px;display:flex;flex-direction:column;gap:2px;">
+              <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
+                <a href="{{ n.href }}" style="{{ n.style }}">
+                  <i data-lucide="{{ n.icon }}" style="width:18px;height:18px;flex-shrink:0;"></i>
+                  <span style="flex:1;">{{ n.label }}</span>
+                  <sc-if value="{{ n.current }}" hint-placeholder-val="{{ false }}">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--brand-gold);flex-shrink:0;"></span>
+                  </sc-if>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section style="background:var(--gradient-dawn);border-bottom:1px solid var(--border-subtle);">
+    <div style="max-width:720px;margin:0 auto;padding:48px 20px 88px;text-align:center;">
+      <h1 style="font-family:var(--font-display);font-size:clamp(26px, 6vw, var(--text-3xl));font-weight:700;margin:0 0 12px;line-height:var(--leading-tight);text-wrap:pretty;">{{ t.heroTitle }}</h1>
+      <p style="font-size:var(--text-md);color:var(--text-secondary);margin:0 auto;max-width:520px;line-height:var(--leading-relaxed);text-wrap:pretty;">{{ t.heroSub }}</p>
+    </div>
+  </section>
+
+  <main style="max-width:720px;margin:-56px auto 0;padding:0 20px 96px;position:relative;">
+
+    <section style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-md);padding:28px 24px 24px;margin-bottom:24px;">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;margin-bottom:20px;">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--gold-50);display:flex;align-items:center;justify-content:center;">
+          <i data-lucide="smartphone" style="width:24px;height:24px;color:var(--gold-700);"></i>
+        </div>
+        <h2 style="font-size:var(--text-lg);font-weight:700;margin:0;">{{ t.cardTitle }}</h2>
+        <p style="margin:0;font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal);max-width:460px;text-wrap:pretty;">{{ t.cardDesc }}</p>
+      </div>
+
+      <div style="position:relative;">
+        <div style="display:flex;align-items:center;gap:10px;background:var(--cream-0);border:1.5px solid var(--border-default);border-radius:var(--radius-pill);padding:6px 8px 6px 20px;">
+          <i data-lucide="search" style="width:20px;height:20px;color:var(--text-tertiary);flex-shrink:0;"></i>
+          <input type="text" value="{{ query }}" onInput="{{ onInput }}" placeholder="{{ t.searchPlaceholder }}" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-family:var(--font-ui);font-size:var(--text-base);color:var(--text-primary);padding:10px 0;">
+          <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ clearQuery }}" style="width:32px;height:32px;border-radius:50%;border:none;background:var(--cream-100);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-secondary);flex-shrink:0;">
+              <i data-lucide="x" style="width:16px;height:16px;"></i>
+            </button>
+          </sc-if>
+        </div>
+        <sc-if value="{{ showSuggestions }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:0;right:0;top:calc(100% + 6px);background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:5;overflow:hidden;text-align:left;">
+            <sc-for list="{{ suggestions }}" as="s" hint-placeholder-count="4">
+              <div onClick="{{ s.onSelect }}" style="padding:12px 18px;font-size:var(--text-sm);cursor:pointer;border-bottom:1px solid var(--border-subtle);" style-hover="background:var(--cream-100);">{{ s.label }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <p style="margin:10px 0 0;font-size:var(--text-xs);color:var(--text-secondary);text-align:center;">{{ t.searchHint }}</p>
+
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border-subtle);display:flex;gap:8px;align-items:flex-start;">
+        <i data-lucide="info" style="width:15px;height:15px;color:var(--text-secondary);flex-shrink:0;margin-top:2px;"></i>
+        <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-normal);">{{ t.searchDisclaimer }}</p>
+      </div>
+    </section>
+
+    <sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom:40px;">
+        <div style="{{ result.cardStyle }}border-radius:var(--radius-card);padding:24px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+            <div style="{{ result.iconWrapStyle }}">
+              <i data-lucide="{{ result.icon }}" style="width:22px;height:22px;color:{{ result.iconColor }};"></i>
+            </div>
+            <h2 style="font-size:var(--text-lg);font-weight:700;margin:0;">{{ result.title }}</h2>
+          </div>
+          <p style="margin:0 0 18px;font-size:var(--text-sm);line-height:var(--leading-normal);color:var(--text-primary);">{{ result.desc }}</p>
+          <div style="background:var(--cream-100);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:18px;display:flex;gap:8px;">
+            <i data-lucide="info" style="width:15px;height:15px;color:var(--text-secondary);flex-shrink:0;margin-top:1px;"></i>
+            <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-normal);">{{ t.resultDisclaimer }}</p>
+          </div>
+          <sc-if value="{{ result.showInstallCta }}" hint-placeholder-val="{{ false }}">
+            <a href="TabiSIM Install Guide.dc.html" style="text-decoration:none;display:block;">
+              <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Button" variant="primary" size="lg" style="width:100%;" hint-size="100%,52px">{{ t.goInstallGuide }}</x-import>
+            </a>
+          </sc-if>
+          <sc-if value="{{ result.showCsCta }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Button" variant="secondary" size="lg" style="width:100%;" hint-size="100%,52px">{{ t.contactCs }}</x-import>
+            <p style="margin:12px 0 0;font-size:var(--text-xs);color:var(--text-secondary);text-align:center;">※ {{ t.csPlaceholderNote }}</p>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <section style="margin-top:16px;">
+      <h2 style="font-size:var(--text-xl);font-weight:700;margin:0 0 6px;">{{ t.browseTitle }}</h2>
+      <p style="margin:0 0 18px;font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal);">{{ t.browseDesc }}</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <sc-for list="{{ browseTabs }}" as="tab" hint-placeholder-count="2">
+          <button onClick="{{ tab.onSelect }}" style="{{ tab.style }}">
+            <i data-lucide="{{ tab.icon }}" style="width:16px;height:16px;"></i>{{ tab.label }}
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <sc-for list="{{ browseGroups }}" as="g" hint-placeholder-count="4">
+          <div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-card);overflow:hidden;">
+            <button onClick="{{ g.onToggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:transparent;border:none;cursor:pointer;font-family:var(--font-ui);color:var(--text-primary);text-align:left;">
+              <span style="display:flex;align-items:center;gap:10px;font-size:var(--text-base);font-weight:700;">{{ g.brand }}<span style="font-size:var(--text-xs);font-weight:500;color:var(--text-secondary);">{{ g.countLabel }}</span></span>
+              <i data-lucide="{{ g.chevron }}" style="width:18px;height:18px;color:var(--text-secondary);"></i>
+            </button>
+            <sc-if value="{{ g.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 18px 18px;display:flex;flex-direction:column;gap:14px;">
+                <div>
+                  <p style="margin:0 0 8px;font-size:var(--text-xs);font-weight:700;color:var(--success);display:flex;align-items:center;gap:6px;"><i data-lucide="check" style="width:14px;height:14px;"></i>{{ t.labelSupported }}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                    <sc-for list="{{ g.supported }}" as="m" hint-placeholder-count="6">
+                      <span style="font-size:var(--text-xs);padding:5px 10px;border-radius:var(--radius-pill);background:var(--cream-100);color:var(--text-primary);">{{ m }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+                <sc-if value="{{ g.hasUnsupported }}" hint-placeholder-val="{{ false }}">
+                  <div>
+                    <p style="margin:0 0 8px;font-size:var(--text-xs);font-weight:700;color:var(--danger);display:flex;align-items:center;gap:6px;"><i data-lucide="x" style="width:14px;height:14px;"></i>{{ t.labelUnsupported }}</p>
+                    <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                      <sc-for list="{{ g.unsupported }}" as="m" hint-placeholder-count="4">
+                        <span style="font-size:var(--text-xs);padding:5px 10px;border-radius:var(--radius-pill);background:var(--danger-bg);color:var(--text-primary);">{{ m }}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ g.hasNote }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);line-height:var(--leading-normal);">※ {{ g.note }}</p>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <p style="margin:16px 0 0;font-size:var(--text-xs);color:var(--text-secondary);">{{ t.dataVersion }} {{ dataVersion }}</p>
+    </section>
+
+  </main>
+
+  <footer style="border-top:1px solid var(--border-subtle);padding:24px 20px;text-align:center;">
+    <p style="margin:0;font-size:var(--text-xs);color:var(--text-secondary);">TabiSIM / HENZA</p>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LANGS = [
+  { code: 'ja', label: '日本語' },
+  { code: 'en', label: 'English' },
+  { code: 'zh-hant', label: '繁體中文' },
+  { code: 'ko', label: '한국어' },
+];
+
+const TEXT = {
+  ja: {
+    heroTitle: 'eSIM対応チェック', heroSub: 'お使いのスマートフォンでTabiSIMが使えるか、出発前にかんたんに確認できます。',
+    cardTitle: 'eSIM対応機種チェッカー', cardDesc: '機種名を入力すると、eSIMに対応しているかをすぐにお知らせします。',
+    searchPlaceholder: '機種名を入力（例：iPhone 15、Galaxy S24）',
+    searchHint: 'メーカー名とモデル名をあわせて入力すると、より正確に判定できます。',
+    searchDisclaimer: 'TabiSIMの独自調査にもとづく情報で、SIMフリーまたはSIMロック解除済みの端末が対象です。一覧にない機種は、お気軽にサポートへお問い合わせください。',
+    resultDisclaimer: '本情報は参考情報であり、対応を保証するものではありません。ご不安な場合はサポートまでお問い合わせください。',
+    goInstallGuide: 'インストールガイドを見る', contactCs: 'サポートに問い合わせる', csPlaceholderNote: '実際の連絡先URLは後日設定します',
+    browseTitle: 'ブランド別の対応機種一覧', browseDesc: '検索しなくても、メーカーごとに対応機種を確認できます。',
+    tabApple: 'iPhone / iPad', tabAndroid: 'Android',
+    notInList: 'TabiSIMの対応リストに含まれていない機種です。機種名の表記が異なる可能性もあるため、ご不明な場合はサポートにお問い合わせください。',
+    labelSupported: '対応', labelUnsupported: '非対応', countSuffix: (n) => `${n}件`, dataVersion: 'データ更新:',
+    notes: {
+      iphone: '中国本土向けモデルはiPhone AirとiPhone 17eのみ対応。香港・マカオ向けの一部はnano-SIM仕様のため非対応です。iPhone 18 / Duoは発表直後のため、仕様は変更される可能性があります。',
+      ipad: 'Wi-Fi + Cellularモデルのみ対応しています。',
+      pixel: '香港で販売されたPixelは全モデル非対応です。米国版Pixel 10シリーズはeSIM専用です。',
+      samsung: '同じ機種でも、販売国・型番・キャリアによって対応状況が異なる場合があります。',
+      oppo: '機種名の末尾に「Lite」が付くモデルは原則非対応です。',
+      jpDomestic: '日本国内向けブランドのため参考情報です。',
+    },
+    supported: { title: '対応しています', desc: (m) => `${m} はeSIMに対応しています。インストールガイドに沿って進めましょう。` },
+    unsupported: { title: '対応していません', desc: (m, reason) => `${m} はeSIMに対応していません。${reason || ''}` },
+    unknown: { title: '対応状況が確認できていません', desc: (m) => `${m} は対応リストで確認できませんでした。型番によって対応状況が異なるため、サポートにお問い合わせください。` },
+    notFound: { title: '該当する機種が見つかりません', desc: () => '入力内容をご確認のうえ、メーカー名とモデル名で入力してみてください。見つからない場合はサポートへお問い合わせください。' },
+  },
+  en: {
+    heroTitle: 'Check your eSIM support', heroSub: 'Make sure TabiSIM works on your phone before you travel.',
+    cardTitle: 'eSIM compatibility checker', cardDesc: "Type your phone's model name and we'll tell you right away if it supports eSIM.",
+    searchPlaceholder: 'Enter model name (e.g. iPhone 15, Galaxy S24)',
+    searchHint: 'Include the brand and model name for the most accurate result.',
+    searchDisclaimer: "Based on TabiSIM's own research. Applies to SIM-free or carrier-unlocked phones. If your model isn't listed, please contact support.",
+    resultDisclaimer: 'This information is for reference only and is not a guarantee. If you are unsure, please contact support.',
+    goInstallGuide: 'View Installation Guide', contactCs: 'Contact support', csPlaceholderNote: 'Real contact link will be added later',
+    browseTitle: 'Compatible devices by brand', browseDesc: 'Prefer to browse? Check supported models by manufacturer.',
+    tabApple: 'iPhone / iPad', tabAndroid: 'Android',
+    notInList: "This model is not on TabiSIM's supported list. If you think the name may be written differently, please contact support.",
+    labelSupported: 'Supported', labelUnsupported: 'Not supported', countSuffix: (n) => `${n} models`, dataVersion: 'Data updated:',
+    notes: {
+      iphone: 'Mainland China models: only iPhone Air and iPhone 17e are supported. Some Hong Kong and Macau models use nano-SIM only and are not supported. iPhone 18 / Duo were just announced, so details may change.',
+      ipad: 'Wi-Fi + Cellular models only.',
+      pixel: 'Pixel phones sold in Hong Kong are not supported. US Pixel 10 models are eSIM-only.',
+      samsung: 'Support can differ by country of sale, model number and carrier, even for the same model.',
+      oppo: 'Models ending in "Lite" are generally not supported.',
+      jpDomestic: 'Japan-market brand. For reference only.',
+    },
+    supported: { title: 'Compatible', desc: (m) => `${m} supports eSIM. Follow the Installation Guide to get connected.` },
+    unsupported: { title: 'Not compatible', desc: (m, reason) => `${m} does not support eSIM. ${reason || ''}` },
+    unknown: { title: 'Compatibility not confirmed', desc: (m) => `We couldn't confirm ${m} in our list. Support can vary by model number, so please contact support.` },
+    notFound: { title: "We couldn't find that model", desc: () => "Check the spelling and try the brand plus model name. If it still doesn't appear, please contact support." },
+  },
+  'zh-hant': {
+    heroTitle: '確認 eSIM 支援', heroSub: '出發前，輕鬆確認您的手機是否能使用 TabiSIM。',
+    cardTitle: 'eSIM 支援機型檢查', cardDesc: '輸入機型名稱，立即告訴您是否支援 eSIM。',
+    searchPlaceholder: '輸入機型名稱（例如：iPhone 15、Galaxy S24）',
+    searchHint: '同時輸入品牌與型號，判定會更準確。',
+    searchDisclaimer: '本資訊依據 TabiSIM 自行調查，適用於無鎖或已解鎖的手機。若清單中沒有您的機型，歡迎聯絡客服。',
+    resultDisclaimer: '本資訊僅供參考，不代表保證支援。如有疑慮，請聯絡客服確認。',
+    goInstallGuide: '查看安裝指南', contactCs: '聯絡客服', csPlaceholderNote: '實際聯絡連結將於稍後補上',
+    browseTitle: '依品牌查看支援機型', browseDesc: '不用搜尋，也能依品牌確認支援機型。',
+    tabApple: 'iPhone / iPad', tabAndroid: 'Android',
+    notInList: '此機型不在 TabiSIM 的支援清單中。若可能是名稱寫法不同，請聯絡客服確認。',
+    labelSupported: '支援', labelUnsupported: '不支援', countSuffix: (n) => `${n} 款`, dataVersion: '資料更新：',
+    notes: {
+      iphone: '中國大陸版僅 iPhone Air 與 iPhone 17e 支援。部分香港、澳門版為 nano-SIM 規格，不支援。iPhone 18 / Duo 剛發表，規格可能變動。',
+      ipad: '僅支援 Wi-Fi + 行動網路機型。',
+      pixel: '香港販售的 Pixel 全機型不支援。美國版 Pixel 10 系列僅支援 eSIM。',
+      samsung: '即使是同一機型，支援狀況也可能因販售國家、型號與電信商而不同。',
+      oppo: '名稱結尾為「Lite」的機型原則上不支援。',
+      jpDomestic: '日本國內品牌，僅供參考。',
+    },
+    supported: { title: '支援', desc: (m) => `${m} 支援 eSIM。請依照安裝指南進行設定。` },
+    unsupported: { title: '不支援', desc: (m, reason) => `${m} 不支援 eSIM。${reason || ''}` },
+    unknown: { title: '尚未確認支援狀況', desc: (m) => `清單中無法確認 ${m}。支援狀況可能因型號而異，請聯絡客服。` },
+    notFound: { title: '找不到符合的機型', desc: () => '請確認輸入內容，並嘗試輸入品牌與型號。若仍找不到，請聯絡客服。' },
+  },
+  ko: {
+    heroTitle: 'eSIM 지원 확인', heroSub: '출발 전에 내 스마트폰에서 TabiSIM을 사용할 수 있는지 간단히 확인하세요.',
+    cardTitle: 'eSIM 지원 기기 확인', cardDesc: '모델명을 입력하면 eSIM 지원 여부를 바로 알려드립니다.',
+    searchPlaceholder: '모델명 입력 (예: iPhone 15, Galaxy S24)',
+    searchHint: '제조사와 모델명을 함께 입력하면 더 정확하게 확인할 수 있습니다.',
+    searchDisclaimer: 'TabiSIM 자체 조사 결과이며, 자급제 또는 SIM 잠금이 해제된 기기가 대상입니다. 목록에 없는 기기는 고객지원에 문의해 주세요.',
+    resultDisclaimer: '본 정보는 참고용이며 지원을 보장하지 않습니다. 확실하지 않은 경우 고객지원팀에 문의해 주세요.',
+    goInstallGuide: '설치 가이드 보기', contactCs: '고객지원 문의', csPlaceholderNote: '실제 연락처 링크는 추후 추가됩니다',
+    browseTitle: '브랜드별 지원 기기', browseDesc: '검색하지 않아도 제조사별로 지원 기기를 확인할 수 있습니다.',
+    tabApple: 'iPhone / iPad', tabAndroid: 'Android',
+    notInList: 'TabiSIM 지원 목록에 없는 기기입니다. 모델명 표기가 다를 수 있으니 확실하지 않으면 고객지원에 문의해 주세요.',
+    labelSupported: '지원', labelUnsupported: '미지원', countSuffix: (n) => `${n}개`, dataVersion: '데이터 업데이트:',
+    notes: {
+      iphone: '중국 본토 모델은 iPhone Air와 iPhone 17e만 지원합니다. 일부 홍콩·마카오 모델은 nano-SIM 전용으로 지원되지 않습니다. iPhone 18 / Duo는 발표 직후라 사양이 바뀔 수 있습니다.',
+      ipad: 'Wi-Fi + Cellular 모델만 지원합니다.',
+      pixel: '홍콩에서 판매된 Pixel은 모든 모델이 미지원입니다. 미국판 Pixel 10 시리즈는 eSIM 전용입니다.',
+      samsung: '같은 모델이라도 판매 국가, 모델 번호, 통신사에 따라 지원 여부가 다를 수 있습니다.',
+      oppo: '모델명 끝에 "Lite"가 붙은 기기는 원칙적으로 미지원입니다.',
+      jpDomestic: '일본 내수 브랜드로 참고용 정보입니다.',
+    },
+    supported: { title: '지원됩니다', desc: (m) => `${m}은 eSIM을 지원합니다. 설치 가이드를 따라 진행해 주세요.` },
+    unsupported: { title: '지원되지 않습니다', desc: (m, reason) => `${m}은 eSIM을 지원하지 않습니다. ${reason || ''}` },
+    unknown: { title: '지원 여부를 확인할 수 없습니다', desc: (m) => `${m}은 지원 목록에서 확인되지 않았습니다. 모델 번호에 따라 다를 수 있으니 고객지원에 문의해 주세요.` },
+    notFound: { title: '일치하는 기기를 찾을 수 없습니다', desc: () => '입력 내용을 확인하고 제조사와 모델명으로 다시 입력해 주세요. 그래도 없으면 고객지원에 문의해 주세요.' },
+  },
+};
+
+const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+class Component extends DCLogic {
+  state = { lang: 'ja', query: '', data: null, focused: false, langMenuOpen: false, navMenuOpen: false, browseTab: 'apple', openGroup: 'iphone' };
+
+  async componentDidMount() {
+    this.icons();
+    const mod = await import('./assets/device-data.js?v=12');
+    this.setState({ data: mod });
+  }
+  componentDidUpdate() { this.icons(); }
+  icons() { if (window.lucide) window.lucide.createIcons(); }
+
+  classify(query) {
+    const { data } = this.state;
+    if (!data || !query.trim()) return null;
+    const q = query.trim();
+    const nq = norm(q);
+    if (data.OTHER_DEVICES.watch.match.test(q)) return { status: 'unsupported', reason: data.OTHER_DEVICES.watch.note };
+    if (data.OTHER_DEVICES.ipad.match.test(q)) {
+      const matched = data.OTHER_DEVICES.ipad.allow.some(a => norm(a) === nq);
+      return matched ? { status: 'supported' } : { status: 'unsupported', reason: data.OTHER_DEVICES.ipad.note };
+    }
+    for (const b of data.EXACT_DENY_BRANDS) {
+      if (b.match.test(q)) {
+        const region = b.regionRules.find(r => r.test(q));
+        if (region) return { status: 'unsupported', reason: region.reason };
+        if (b.deny.some(d => norm(d) === nq)) return { status: 'unsupported', reason: null };
+        return b.allowNorm.test(nq) ? { status: 'supported' } : { status: 'unsupported', notInList: true };
+      }
+    }
+    for (const u of data.UNKNOWN_DEFAULT_BRANDS) {
+      if (u.match.test(q)) return u.allowPattern.test(q) ? { status: 'supported' } : { status: 'unsupported', notInList: true };
+    }
+    for (const w of data.WHITELIST_BRANDS) {
+      if (w.match.test(q)) {
+        if (w.denyPattern && w.denyPattern.test(q)) return { status: 'unsupported', reason: null };
+        const ok = w.allow.some(a => norm(a) === nq) || (w.allowPattern && w.allowPattern.test(q));
+        return ok ? { status: 'supported' } : { status: 'unsupported', notInList: true };
+      }
+    }
+    return { status: 'unsupported', notInList: true };
+  }
+
+  renderVals() {
+    const lang = this.state.lang;
+    const T = TEXT[lang];
+    const data = this.state.data;
+    const langs = LANGS.map(l => ({
+      code: l.code, label: l.label,
+      menuStyle: `padding:11px 16px;font-size:var(--text-sm);cursor:pointer;color:${l.code === lang ? 'var(--brand-brown)' : 'var(--text-primary)'};font-weight:${l.code === lang ? '700' : '400'};background:${l.code === lang ? 'var(--cream-100)' : 'transparent'};`,
+      onSelect: () => this.setState({ lang: l.code, langMenuOpen: false }),
+    }));
+
+    const query = this.state.query;
+    const cls = this.classify(query);
+    let result = null;
+    if (cls) {
+      const map = {
+        supported: { key: 'supported', icon: 'check-circle-2', iconColor: 'var(--gold-700)', bg: 'var(--gold-50)', border: 'var(--brand-gold)', glow: true, ctaInstall: true, ctaCs: false },
+        unsupported: { key: 'unsupported', icon: 'x-circle', iconColor: 'var(--danger)', bg: 'var(--danger-bg)', border: 'var(--danger)', ctaInstall: false, ctaCs: true },
+        unknown: { key: 'unknown', icon: 'help-circle', iconColor: 'var(--warning)', bg: 'var(--warning-bg)', border: 'var(--warning)', ctaInstall: false, ctaCs: true },
+        notfound: { key: 'notFound', icon: 'search-x', iconColor: 'var(--text-secondary)', bg: 'var(--cream-100)', border: 'var(--border-default)', ctaInstall: false, ctaCs: true },
+      };
+      const m = map[cls.status];
+      const copy = T[m.key];
+      result = {
+        title: copy.title,
+        desc: cls.status === 'unsupported' ? copy.desc(query, cls.notInList ? T.notInList : cls.reason) : copy.desc(query),
+        icon: m.icon, iconColor: m.iconColor,
+        cardStyle: `background:var(--surface-card);border:1px solid ${m.border};${m.glow ? 'box-shadow:var(--shadow-gold-glow);' : 'box-shadow:var(--shadow-sm);'}`,
+        iconWrapStyle: `width:40px;height:40px;border-radius:50%;background:${m.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;`,
+        showInstallCta: m.ctaInstall, showCsCta: m.ctaCs,
+      };
+    }
+
+    const suggestions = data && this.state.focused && query.trim()
+      ? data.SUGGESTIONS.filter(s => s.toLowerCase().includes(query.toLowerCase())).slice(0, 6).map(s => ({ label: s, onSelect: () => this.setState({ query: s, focused: false }) }))
+      : [];
+
+    const tabs = [{ key: 'apple', label: T.tabApple, icon: 'apple' }, { key: 'android', label: T.tabAndroid, icon: 'smartphone' }];
+    const browseTabs = tabs.map(tb => {
+      const on = this.state.browseTab === tb.key;
+      return {
+        ...tb,
+        style: `display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-size:var(--text-sm);font-weight:500;padding:9px 16px;border-radius:var(--radius-pill);cursor:pointer;border:1px solid ${on ? 'var(--brand-brown)' : 'var(--border-default)'};background:${on ? 'var(--brand-brown)' : 'var(--surface-card)'};color:${on ? '#fff' : 'var(--text-primary)'};`,
+        onSelect: () => this.setState({ browseTab: tb.key, openGroup: null }),
+      };
+    });
+    const groups = data ? data.BROWSE[this.state.browseTab] : [];
+    const browseGroups = groups.map(g => {
+      const open = this.state.openGroup === g.key;
+      return {
+        brand: g.brand,
+        countLabel: T.countSuffix(g.supported.length),
+        open, chevron: open ? 'chevron-up' : 'chevron-down',
+        supported: g.supported,
+        unsupported: g.unsupported || [], hasUnsupported: !!(g.unsupported && g.unsupported.length),
+        note: g.noteKey ? T.notes[g.noteKey] : '', hasNote: !!g.noteKey,
+        onToggle: () => this.setState(s => ({ openGroup: s.openGroup === g.key ? null : g.key })),
+      };
+    });
+
+    return {
+      langs, t: T, query,
+      hasQuery: !!query,
+      clearQuery: () => this.setState({ query: '', focused: false }),
+      onInput: (e) => this.setState({ query: e.target.value, focused: true }),
+      hasResult: !!result, result,
+      showSuggestions: this.state.focused && suggestions.length > 0 && suggestions[0].label.toLowerCase() !== query.toLowerCase(),
+      suggestions,
+      browseTabs, browseGroups,
+      dataVersion: data ? data.DATA_VERSION : '',
+      langMenuOpen: this.state.langMenuOpen,
+      toggleLangMenu: () => this.setState(s => ({ langMenuOpen: !s.langMenuOpen, navMenuOpen: false })),
+      navMenuOpen: this.state.navMenuOpen,
+      toggleNavMenu: () => this.setState(s => ({ navMenuOpen: !s.navMenuOpen, langMenuOpen: false }), () => { if (window.lucide) window.lucide.createIcons(); }),
+      navItems: (() => {
+        const L = {
+          ja: ['インストールガイド', 'eSIM対応チェック', 'データ使用量の確認'],
+          en: ['Installation Guide', 'Check eSIM Support', 'Check Data Usage'],
+          'zh-hant': ['安裝指南', '確認 eSIM 支援', '查看數據用量'],
+          ko: ['설치 가이드', 'eSIM 지원 확인', '데이터 사용량 확인'],
+        }[this.state.lang] || [];
+        return [
+          { key: 'install', href: 'TabiSIM Install Guide.dc.html', icon: 'download' },
+          { key: 'check', href: 'TabiSIM Compatibility Checker.dc.html', icon: 'smartphone' },
+          { key: 'usage', href: 'TabiSIM Data Usage Guide.dc.html', icon: 'bar-chart-3' },
+        ].map((n, i) => ({
+          ...n, label: L[i], current: n.key === 'check',
+          style: `display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-md);font-size:var(--text-sm);text-decoration:none;color:var(--text-primary);font-weight:${n.key === 'check' ? '700' : '500'};background:${n.key === 'check' ? 'var(--cream-100)' : 'transparent'};`,
+        }));
+      })(),
+
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -87,7 +87,7 @@
     background:var(--cream-50);
   }
   .brand{display:flex;align-items:center;}
-  .brand img{height:32px;width:auto;display:block;}
+  .brand img{height:38px;width:auto;display:block;}
   .brand svg{width:22px;height:22px;flex:none;}
   .top-icons{display:flex;gap:10px;}
   .icon-btn{
@@ -441,6 +441,52 @@
 
   function escapeRegex(s){
     return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  }
+
+  // ---------- display-name translation ----------
+  // 検索マッチングには元の日本語表記（初代／第N世代／Nインチ）をそのまま使い、
+  // 画面表示のみ言語ごとに置き換える。マッチングロジックには影響しない。
+  function ordinalEn(n){
+    n = parseInt(n, 10);
+    var v = n % 100;
+    if (v >= 11 && v <= 13) return n + "th";
+    switch (n % 10){
+      case 1: return n + "st";
+      case 2: return n + "nd";
+      case 3: return n + "rd";
+      default: return n + "th";
+    }
+  }
+
+  function translateModelName(name, lang){
+    if (!name || lang === "ja") return name;
+    var out = name;
+
+    out = out.replace(/初代/g, function(){
+      if (lang === "en") return "1st Gen";
+      if (lang === "ko") return "1세대";
+      return "初代";
+    });
+
+    out = out.replace(/第(\d+)\/(\d+)世代/g, function(_, a, b){
+      if (lang === "en") return ordinalEn(a) + "/" + ordinalEn(b) + " Gen";
+      if (lang === "ko") return a + "/" + b + "세대";
+      return "第" + a + "/" + b + "代";
+    });
+
+    out = out.replace(/第(\d+)世代/g, function(_, a){
+      if (lang === "en") return ordinalEn(a) + " Gen";
+      if (lang === "ko") return a + "세대";
+      return "第" + a + "代";
+    });
+
+    out = out.replace(/(\d+(?:\.\d+)?)インチ/g, function(_, a){
+      if (lang === "en") return a + "-inch";
+      if (lang === "ko") return a + "인치";
+      return a + "吋";
+    });
+
+    return out;
   }
 
   // トークン境界を跨がない完全一致のみ許可する（部分一致による誤判定を防止）
@@ -804,7 +850,7 @@
     var el = document.getElementById(id);
     if (!el) return;
     el.innerHTML = "";
-    items.forEach(function(m){ el.appendChild(chip(m, ng)); });
+    items.forEach(function(m){ el.appendChild(chip(translateModelName(m, currentLang), ng)); });
   }
 
   function renderAppleStatic(){
@@ -829,7 +875,7 @@
       var d = document.createElement("details");
       d.className = "brand-group";
       var body = '<div class="sub"><h4>' + t().supportedModelsH + '</h4><div class="chip-row">' +
-        b.list.map(function(m){return '<span class="chip">'+m+'</span>';}).join("") +
+        b.list.map(function(m){return '<span class="chip">'+translateModelName(m, currentLang)+'</span>';}).join("") +
         '</div></div><p class="group-footnote">' + (t().androidNotes[key] || "") + '</p>';
       d.innerHTML = '<summary>' + bl(key) + ' <span class="count">' + t().unitCount(b.list.length) + '</span>' +
         '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
@@ -842,9 +888,9 @@
     pixelDetails.innerHTML = '<summary>' + bl("pixel") + ' <span class="count">' + t().unitCount(DB.pixel.supportedDisplay.length) + '</span>' +
       '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
       '<div class="group-body"><div class="sub"><h4>' + t().okH + '</h4><div class="chip-row">' +
-      DB.pixel.supportedDisplay.map(function(m){return '<span class="chip">'+m+'</span>';}).join("") +
+      DB.pixel.supportedDisplay.map(function(m){return '<span class="chip">'+translateModelName(m, currentLang)+'</span>';}).join("") +
       '</div></div><div class="sub"><h4>' + t().ngH + '</h4><div class="chip-row">' +
-      DB.pixel.unsupported.map(function(m){return '<span class="chip ng">'+m+'</span>';}).join("") +
+      DB.pixel.unsupported.map(function(m){return '<span class="chip ng">'+translateModelName(m, currentLang)+'</span>';}).join("") +
       '</div></div><p class="group-footnote">' + t().pixelFootnote + '</p></div>';
     panel.prepend(pixelDetails);
   }

@@ -97,6 +97,19 @@
   }
   .icon-btn:hover{background:var(--gold-100);}
   .icon-btn:focus-visible{outline:2px solid var(--gold-500);outline-offset:2px;}
+  .lang-wrap{position:relative;}
+  .lang-menu{
+    position:absolute;top:calc(100% + 8px);right:0;z-index:20;min-width:140px;
+    background:var(--cream-100);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 10px 30px -10px rgba(42,33,24,.25);padding:6px;
+  }
+  .lang-item{
+    display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;
+    border:0;background:transparent;font-family:inherit;font-size:14px;color:var(--brown);cursor:pointer;
+  }
+  .lang-item:hover{background:var(--gold-100);}
+  .lang-item.active{font-weight:700;color:var(--gold-500);}
+  .lang-item:focus-visible{outline:2px solid var(--gold-500);outline-offset:-2px;}
 
   .hero{
     border-radius:20px;
@@ -185,6 +198,7 @@
   .btn:active{transform:scale(.98);}
   .btn-primary{background:var(--brown);color:var(--cream-50);}
   .btn-primary:hover{filter:brightness(1.15);}
+  :root[data-theme="dark"] .btn-primary:hover, @media (prefers-color-scheme:dark){}
   .btn-outline{background:transparent;color:var(--brown);border-color:var(--line);}
   .btn-outline:hover{background:var(--gold-100);}
 
@@ -235,32 +249,40 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <img src="tabisim-logo.png" alt="TabiSIM">
+      <img src="assets/tabisim-logo.png" alt="TabiSIM">
     </div>
     <div class="top-icons">
-      <button class="icon-btn" aria-label="言語切り替え" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
-      </button>
+      <div class="lang-wrap">
+        <button class="icon-btn" id="lang-btn" aria-label="Language / 言語切り替え" aria-haspopup="true" aria-expanded="false" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/></svg>
+        </button>
+        <div class="lang-menu" id="lang-menu" hidden>
+          <button type="button" class="lang-item" data-lang="ja">日本語</button>
+          <button type="button" class="lang-item" data-lang="en">English</button>
+          <button type="button" class="lang-item" data-lang="zh-hant">繁體中文</button>
+          <button type="button" class="lang-item" data-lang="ko">한국어</button>
+        </div>
+      </div>
     </div>
   </header>
 
   <section class="hero">
-    <h1>eSIM対応チェック</h1>
-    <p>お使いのスマートフォンでTabiSIMが使えるか、出発前にかんたんに確認できます。</p>
+    <h1 id="t-hero-title">eSIM対応チェック</h1>
+    <p id="t-hero-sub">お使いのスマートフォンでTabiSIMが使えるか、出発前にかんたんに確認できます。</p>
   </section>
 
   <section class="card">
     <div class="card-icon">
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg>
     </div>
-    <h2>eSIM対応機種チェッカー</h2>
-    <p class="lead">機種名を入力すると、eSIMに対応しているかをすぐにお知らせします。</p>
+    <h2 id="t-card-title">eSIM対応機種チェッカー</h2>
+    <p class="lead" id="t-card-lead">機種名を入力すると、eSIMに対応しているかをすぐにお知らせします。</p>
 
     <div class="search-box">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
       <input id="search-input" type="text" inputmode="search" placeholder="機種名を入力（例：iPhone 15、Galaxy S24）" aria-label="機種名を入力">
     </div>
-    <p class="search-hint">メーカー名とモデル名をあわせて入力すると、より正確に判定できます。</p>
+    <p class="search-hint" id="t-search-hint">メーカー名とモデル名をあわせて入力すると、より正確に判定できます。</p>
 
     <div id="result" class="result">
       <div class="result-head">
@@ -274,13 +296,13 @@
 
     <div class="disclaimer">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-      <span>本情報はTabiSIMの独自調査にもとづく参考情報であり、対応を保証するものではありません。SIMフリーまたはSIMロック解除済みの端末が対象です。ご心配な場合はお気軽にサポートへお問い合わせください。</span>
+      <span id="t-disclaimer">本情報はTabiSIMの独自調査にもとづく参考情報であり、対応を保証するものではありません。SIMフリーまたはSIMロック解除済みの端末が対象です。ご心配な場合はお気軽にサポートへお問い合わせください。</span>
     </div>
   </section>
 
   <section class="list-section">
-    <h3>ブランド別の対応機種一覧</h3>
-    <p>検索しなくても、メーカーごとに対応機種を確認できます。</p>
+    <h3 id="t-list-title">ブランド別の対応機種一覧</h3>
+    <p id="t-list-sub">検索しなくても、メーカーごとに対応機種を確認できます。</p>
 
     <div class="tabs">
       <button class="tab active" data-tab="apple" type="button">
@@ -297,23 +319,23 @@
       <details class="brand-group" open>
         <summary>iPhone <span class="count" id="iphone-count"></span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
         <div class="group-body">
-          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>対応</h4><div class="chip-row" id="iphone-ok"></div></div>
-          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>非対応</h4><div class="chip-row" id="iphone-ng"></div></div>
-          <p class="group-footnote">※ 中国本土向けモデルはiPhone AirとiPhone 17eのみ対応。香港・マカオ向けの一部はnano-SIM仕様のため非対応です。iPhone 18 / Duoは発表直後のため、仕様は変更される可能性があります。</p>
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="t-iphone-ok-h">対応</span></h4><div class="chip-row" id="iphone-ok"></div></div>
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg><span id="t-iphone-ng-h">非対応</span></h4><div class="chip-row" id="iphone-ng"></div></div>
+          <p class="group-footnote" id="t-iphone-footnote">※ 中国本土向けモデルはiPhone AirとiPhone 17eのみ対応。香港・マカオ向けの一部はnano-SIM仕様のため非対応です。iPhone 18 / Duoは発表直後のため、仕様は変更される可能性があります。</p>
         </div>
       </details>
       <details class="brand-group">
         <summary>iPad <span class="count" id="ipad-count"></span><svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
         <div class="group-body">
-          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>対応（Wi-Fi+Cellularモデルのみ）</h4><div class="chip-row" id="ipad-ok"></div></div>
-          <p class="group-footnote">Wi-Fi専用モデルはeSIM非対応です。Apple Watchは本チェッカーの対象外です（旅行用eSIM自体がインストールできません）。</p>
+          <div class="sub"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="t-ipad-ok-h">対応（Wi-Fi+Cellularモデルのみ）</span></h4><div class="chip-row" id="ipad-ok"></div></div>
+          <p class="group-footnote" id="t-ipad-footnote">Wi-Fi専用モデルはeSIM非対応です。Apple Watchは本チェッカーの対象外です（旅行用eSIM自体がインストールできません）。</p>
         </div>
       </details>
     </div>
 
     <div id="panel-android" hidden></div>
 
-    <p class="version-note">データ更新: v1（2026-09-23確定）</p>
+    <p class="version-note" id="t-version-note">データ更新: v1（2026-09-23確定）</p>
   </section>
 
   <footer class="bottom">TabiSIM / HENZA</footer>
@@ -327,12 +349,20 @@
       brandLabel: "iPhone",
       method: "blacklist",
       unsupported: ["初代","3G","3GS","4","4S","5","5c","5s","6","6 Plus","6s","6s Plus","SE (第1世代)","7","7 Plus","8","8 Plus","X"],
+      // 検索一致専用の別名（チップ表示はしない）。表記ゆれ・英数字表記からも「初代」等に一致させるため。
+      unsupportedAliases: {
+        "初代": ["iPhone 1","iPhone 1st Gen","iPhone First Generation","iPhone 2G"],
+        "SE (第1世代)": ["iPhone SE 1","iPhone SE 1st Gen","iPhone SE First Generation"]
+      },
       supportedDisplay: ["18","18 Pro","Ultra","Duo","17","17 Pro","17 Pro Max","17e","Air","16","16 Plus","16 Pro","16 Pro Max","16e","15","15 Plus","15 Pro","15 Pro Max","14","14 Plus","14 Pro","14 Pro Max","13 mini","13","13 Pro","13 Pro Max","12 mini","12","12 Pro","12 Pro Max","11","11 Pro","11 Pro Max","XS","XS Max","XR","SE (第2/3世代)"]
     },
     pixel: {
       brandLabel: "Google Pixel",
       method: "blacklist",
       unsupported: ["初代 (2016)"],
+      unsupportedAliases: {
+        "初代 (2016)": ["Pixel 1st Gen","Pixel First Generation","Pixel (2016)"]
+      },
       supportedDisplay: ["2","2 XL","3","3 XL","3a","3a XL","4","4 XL","4a","4a (5G)","5","5a (5G)","6","6 Pro","6a","7","7 Pro","7a","Fold","8","8 Pro","8a","9","9 Pro","9 Pro XL","9 Pro Fold","9a","10","10 Pro","10 Pro XL","10 Pro Fold","10a","11","11 Pro","11 Pro XL","11 Pro Fold"]
     },
     galaxy: {
@@ -393,17 +423,55 @@
   var WHITELIST_BRANDS = ["xiaomi","oppo","vivo","huawei"];
 
   // ---------- normalize helper ----------
+  // 文字と数字の境界にスペースを入れてからトークン化する（例: "iphone1" -> "iphone 1"）。
+  // これにより「11」に「1」が誤って部分一致する、といった事故を防ぐ。
+  var BRAND_ROOTS = "iphone|ipad|pixel|galaxy|xperia|aquos|huawei|xiaomi|redmi|poco|oppo|vivo|motorola|moto";
   function norm(s){
     return s.toLowerCase()
-      .replace(/[\s\-_/]+/g,"")
-      .replace(/[＋+]/g,"plus")
-      .replace(/ｐｒｏ/g,"pro");
+      // ブランド名に型番が直接連結された入力（例: "iPhoneXS"）にもスペースを入れる
+      .replace(new RegExp("\\b(" + BRAND_ROOTS + ")([a-z])","g"),"$1 $2")
+      .replace(/[＋]/g,"+")
+      .replace(/\+/g," plus ")
+      .replace(/[()（）・/,]/g," ")
+      .replace(/([a-z])(\d)/g,"$1 $2")
+      .replace(/(\d)([a-z])/g,"$1 $2")
+      .replace(/[\s\-_]+/g," ")
+      .trim();
+  }
+
+  function escapeRegex(s){
+    return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+  }
+
+  // トークン境界を跨がない完全一致のみ許可する（部分一致による誤判定を防止）
+  function boundaryContains(haystack, needle){
+    if (!needle) return false;
+    var re = new RegExp("(^|\\s)" + escapeRegex(needle) + "(\\s|$)");
+    return re.test(" " + haystack + " ");
+  }
+
+  function tokenMatch(a, b){
+    var na = norm(a), nb = norm(b);
+    if (!na || !nb) return false;
+    return boundaryContains(na, nb) || boundaryContains(nb, na);
   }
 
   function matchList(input, list){
-    var n = norm(input);
     for (var i=0;i<list.length;i++){
-      if (n.indexOf(norm(list[i])) !== -1 || norm(list[i]).indexOf(n) !== -1) return list[i];
+      if (tokenMatch(input, list[i])) return list[i];
+    }
+    return null;
+  }
+
+  // list（表示用の非対応リスト）＋ aliasMap（検索専用の別名。表示はしない）から一致を探す
+  function matchListWithAliases(input, list, aliasMap){
+    var hit = matchList(input, list);
+    if (hit) return hit;
+    if (!aliasMap) return null;
+    for (var i=0;i<list.length;i++){
+      var aliases = aliasMap[list[i]];
+      if (!aliases) continue;
+      if (matchList(input, aliases)) return list[i];
     }
     return null;
   }
@@ -434,29 +502,203 @@
     }
     var brand = DB[brandKey];
     if (brand.excluded){
-      return {status:"excluded", brand:brand};
+      return {status:"excluded", brand:brand, brandKey:brandKey};
     }
 
     if (brand.method === "blacklist"){
-      var hitNg = matchList(raw, brand.unsupported);
-      return { status: hitNg ? "ng" : "ok", brand:brand, matched:hitNg };
+      var hitNg = matchListWithAliases(raw, brand.unsupported, brand.unsupportedAliases);
+      if (hitNg) return { status:"ng", brand:brand, brandKey:brandKey, matched:hitNg };
+      // 非対応リストに一致しなくても、実在する対応機種名として確認できない入力
+      // （例: 存在しない型番、誤入力）は「対応」と断定せず不明機種として扱う。
+      var hitOkModel = matchList(raw, brand.supportedDisplay);
+      if (hitOkModel) return { status:"ok", brand:brand, brandKey:brandKey, matched:hitOkModel };
+      return { status:"unknown_model", brand:brand, brandKey:brandKey };
     }
     if (brand.method === "whitelist"){
       var hitOk = matchList(raw, brand.list);
-      if (hitOk) return {status:"ok", brand:brand, matched:hitOk};
+      if (hitOk) return {status:"ok", brand:brand, brandKey:brandKey, matched:hitOk};
       if (brand.knownUnsupported){
         var hitKnownNg = matchList(raw, brand.knownUnsupported);
-        if (hitKnownNg) return {status:"ng", brand:brand, matched:hitKnownNg};
+        if (hitKnownNg) return {status:"ng", brand:brand, brandKey:brandKey, matched:hitKnownNg};
       }
-      return {status:"ng", brand:brand};
+      return {status:"ng", brand:brand, brandKey:brandKey};
     }
     if (brand.method === "whitelist_unknown"){
       var hit = matchList(raw, brand.list);
-      if (hit) return {status:"ok", brand:brand, matched:hit};
-      return {status:"unknown_model", brand:brand};
+      if (hit) return {status:"ok", brand:brand, brandKey:brandKey, matched:hit};
+      return {status:"unknown_model", brand:brand, brandKey:brandKey};
     }
     return {status:"unknown_brand"};
   }
+
+  // ---------- i18n ----------
+  var LANG_NAMES = {ja:"日本語", en:"English", "zh-hant":"繁體中文", ko:"한국어"};
+  var I18N = {
+    ja: {
+      heroTitle:"eSIM対応チェック",
+      heroSub:"お使いのスマートフォンでTabiSIMが使えるか、出発前にかんたんに確認できます。",
+      cardTitle:"eSIM対応機種チェッカー",
+      cardLead:"機種名を入力すると、eSIMに対応しているかをすぐにお知らせします。",
+      searchPlaceholder:"機種名を入力（例：iPhone 15、Galaxy S24）",
+      searchAria:"機種名を入力",
+      searchHint:"メーカー名とモデル名をあわせて入力すると、より正確に判定できます。",
+      disclaimer:"本情報はTabiSIMの独自調査にもとづく参考情報であり、対応を保証するものではありません。SIMフリーまたはSIMロック解除済みの端末が対象です。ご心配な場合はお気軽にサポートへお問い合わせください。",
+      listTitle:"ブランド別の対応機種一覧",
+      listSub:"検索しなくても、メーカーごとに対応機種を確認できます。",
+      iphoneOkH:"対応", iphoneNgH:"非対応",
+      iphoneFootnote:"※ 中国本土向けモデルはiPhone AirとiPhone 17eのみ対応。香港・マカオ向けの一部はnano-SIM仕様のため非対応です。iPhone 18 / Duoは発表直後のため、仕様は変更される可能性があります。",
+      ipadOkH:"対応（Wi-Fi+Cellularモデルのみ）",
+      ipadFootnote:"Wi-Fi専用モデルはeSIM非対応です。Apple Watchは本チェッカーの対象外です（旅行用eSIM自体がインストールできません）。",
+      versionNote:"データ更新: v1（2026-09-23確定）",
+      okH:"対応", ngH:"非対応", supportedModelsH:"対応機種",
+      unitCount:function(n){ return n + "件"; },
+      badgeUnknownBrand:"該当なし", badgeExcluded:"対象外", badgeOk:"対応", badgeNg:"非対応", badgeUnknownModel:"該当なし（不明機種）",
+      bodyUnknownBrand:"対応リストに一致する機種が見つかりませんでした。メーカー名を含めて再度お試しいただくか、サポートまでお問い合わせください。",
+      bodyExcluded:"Apple Watchは本チェッカーの対象外です。旅行用eSIM自体をインストールできないためです。",
+      bodyOk:"この機種はTabiSIMのeSIMに対応しています。インストール手順に進みましょう。",
+      bodyNg:"この機種は現在TabiSIMのeSIMに対応していません。",
+      bodyUnknownModel:function(brandLabel){ return brandLabel + "の対応リストに明確に一致しませんでした。型番のご確認をお願いします。旧世代シリーズや型番不明の機種の可能性があります。"; },
+      noteUnknownModel:"販売国・型番・キャリアにより対応状況が異なる場合があります。ご不明な場合はサポートへお問い合わせください。",
+      btnGuide:"インストール手順を見る", btnSupport:"サポートに問い合わせる",
+      titleQuoted:function(q){ return "「" + q + "」"; },
+      brands:{iphone:"iPhone", ipad:"iPad", pixel:"Google Pixel", watch:"Apple Watch", galaxy:"Samsung Galaxy", xperia:"Sony Xperia", aquos:"AQUOS（シャープ）", motorola:"Motorola", xiaomi:"Xiaomi / Redmi / POCO", oppo:"OPPO", vivo:"Vivo", huawei:"Huawei"},
+      androidNotes:{
+        galaxy:"上記系列に明確に一致しない機種（旧世代シリーズ・型番不明を含む）は「該当なし（不明機種）」として表示されます。",
+        xperia:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。",
+        aquos:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。",
+        motorola:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。",
+        xiaomi:"上記に明記された機種のみ対応。それ以外はすべて非対応です。",
+        oppo:"上記に明記された機種のみ対応。末尾「Lite」モデルは原則非対応です。",
+        vivo:"上記に明記された機種のみ対応。それ以外はすべて非対応です。",
+        huawei:"P40 Pro+ / P50 Proは型番が似ていますが非対応です。ご注意ください。"
+      },
+      pixelFootnote:"米国版Pixel 10/10 Pro/10 Pro XLはeSIM専用です。香港で販売されるPixel全モデルはeSIM非対応です。"
+    },
+    en: {
+      heroTitle:"Check Your eSIM Support",
+      heroSub:"Find out in seconds whether your phone works with TabiSIM, before you travel.",
+      cardTitle:"eSIM Compatibility Checker",
+      cardLead:"Enter your phone model and we'll tell you right away if it supports eSIM.",
+      searchPlaceholder:"Enter your model (e.g. iPhone 15, Galaxy S24)",
+      searchAria:"Enter your phone model",
+      searchHint:"Include the manufacturer name for a more accurate result.",
+      disclaimer:"This information is based on TabiSIM's own research and does not guarantee compatibility. It applies to unlocked (SIM-free) devices only. If you're unsure, please contact our support team.",
+      listTitle:"Compatible Models by Brand",
+      listSub:"Browse compatible models by manufacturer without searching.",
+      iphoneOkH:"Supported", iphoneNgH:"Not Supported",
+      iphoneFootnote:"Note: In mainland China, only iPhone Air and iPhone 17e are supported. Some Hong Kong / Macau models use nano-SIM and are not supported. iPhone 18 / Duo were just announced, so specifications may change.",
+      ipadOkH:"Supported (Wi-Fi + Cellular models only)",
+      ipadFootnote:"Wi-Fi-only models do not support eSIM. Apple Watch is not covered by this checker, since travel eSIMs cannot be installed on it.",
+      versionNote:"Data updated: v1 (confirmed 2026-09-23)",
+      okH:"Supported", ngH:"Not Supported", supportedModelsH:"Supported Models",
+      unitCount:function(n){ return n + " models"; },
+      badgeUnknownBrand:"No Match", badgeExcluded:"Not Applicable", badgeOk:"Supported", badgeNg:"Not Supported", badgeUnknownModel:"No Match (Unknown Model)",
+      bodyUnknownBrand:"We couldn't find a matching model. Please try again including the manufacturer name, or contact support.",
+      bodyExcluded:"Apple Watch is not covered by this checker, since travel eSIMs cannot be installed on it.",
+      bodyOk:"This model supports TabiSIM's eSIM. Let's get it installed.",
+      bodyNg:"This model does not currently support TabiSIM's eSIM.",
+      bodyUnknownModel:function(brandLabel){ return "We couldn't clearly match this to the " + brandLabel + " list. Please double-check the model name — it may be an older or unrecognized model."; },
+      noteUnknownModel:"Support can vary by sales region, model number, and carrier. If you're unsure, please contact support.",
+      btnGuide:"View Installation Guide", btnSupport:"Contact Support",
+      titleQuoted:function(q){ return "“" + q + "”"; },
+      brands:{iphone:"iPhone", ipad:"iPad", pixel:"Google Pixel", watch:"Apple Watch", galaxy:"Samsung Galaxy", xperia:"Sony Xperia", aquos:"AQUOS (Sharp)", motorola:"Motorola", xiaomi:"Xiaomi / Redmi / POCO", oppo:"OPPO", vivo:"Vivo", huawei:"Huawei"},
+      androidNotes:{
+        galaxy:"Models that don't clearly match the series above (including older generations and unidentified models) are shown as “No Match (Unknown Model)”.",
+        xperia:"Models that don't clearly match the series above are shown as “No Match (Unknown Model)”.",
+        aquos:"Models that don't clearly match the series above are shown as “No Match (Unknown Model)”.",
+        motorola:"Models that don't clearly match the series above are shown as “No Match (Unknown Model)”.",
+        xiaomi:"Only the models listed above are supported. All others are not supported.",
+        oppo:"Only the models listed above are supported. Models ending in “Lite” are generally not supported.",
+        vivo:"Only the models listed above are supported. All others are not supported.",
+        huawei:"P40 Pro+ and P50 Pro have similar model names but are not supported. Please double-check."
+      },
+      pixelFootnote:"US-market Pixel 10 / 10 Pro / 10 Pro XL are eSIM-only. All Pixel models sold in Hong Kong do not support eSIM."
+    },
+    "zh-hant": {
+      heroTitle:"eSIM 相容性查詢",
+      heroSub:"出發前先確認您的手機是否支援 TabiSIM，幾秒鐘就能知道結果。",
+      cardTitle:"eSIM 相容機型查詢",
+      cardLead:"輸入您的手機型號，立即為您確認是否支援 eSIM。",
+      searchPlaceholder:"請輸入機型（例：iPhone 15、Galaxy S24）",
+      searchAria:"請輸入手機型號",
+      searchHint:"同時輸入品牌名稱與型號，判定會更準確。",
+      disclaimer:"本資訊為 TabiSIM 自行調查之參考資料，不保證實際相容性。僅適用於未鎖卡（SIM-free）之裝置。如有疑慮，歡迎與客服聯繫。",
+      listTitle:"依品牌查看相容機型",
+      listSub:"不需搜尋，也能依廠牌查看相容機型清單。",
+      iphoneOkH:"支援", iphoneNgH:"不支援",
+      iphoneFootnote:"※ 中國大陸版本僅 iPhone Air 與 iPhone 17e 支援。部分港澳版本採用 nano-SIM 規格，不支援。iPhone 18 / Duo 剛發表，規格可能異動。",
+      ipadOkH:"支援（僅限 Wi-Fi + Cellular 機型）",
+      ipadFootnote:"僅 Wi-Fi 版本不支援 eSIM。Apple Watch 不在本查詢範圍內，因為旅遊用 eSIM 無法安裝於 Apple Watch。",
+      versionNote:"資料更新：v1（2026-09-23 確認）",
+      okH:"支援", ngH:"不支援", supportedModelsH:"支援機型",
+      unitCount:function(n){ return n + " 款"; },
+      badgeUnknownBrand:"查無資料", badgeExcluded:"不適用", badgeOk:"支援", badgeNg:"不支援", badgeUnknownModel:"查無資料（機型不明）",
+      bodyUnknownBrand:"找不到相符的機型。請包含品牌名稱再試一次，或聯繫客服。",
+      bodyExcluded:"Apple Watch 不在本查詢範圍內，因為旅遊用 eSIM 無法安裝於 Apple Watch。",
+      bodyOk:"此機型支援 TabiSIM 的 eSIM。一起前往安裝步驟吧。",
+      bodyNg:"此機型目前不支援 TabiSIM 的 eSIM。",
+      bodyUnknownModel:function(brandLabel){ return "無法與" + brandLabel + "支援清單明確對應。請確認型號是否正確，也可能是較舊或無法辨識的機型。"; },
+      noteUnknownModel:"支援情形可能依銷售地區、型號、電信業者而異。如有疑問，歡迎聯繫客服。",
+      btnGuide:"查看安裝教學", btnSupport:"聯繫客服",
+      titleQuoted:function(q){ return "「" + q + "」"; },
+      brands:{iphone:"iPhone", ipad:"iPad", pixel:"Google Pixel", watch:"Apple Watch", galaxy:"Samsung Galaxy", xperia:"Sony Xperia", aquos:"AQUOS（夏普）", motorola:"Motorola", xiaomi:"Xiaomi / Redmi / POCO", oppo:"OPPO", vivo:"Vivo", huawei:"Huawei"},
+      androidNotes:{
+        galaxy:"未明確對應上述系列的機型（包含較舊系列、型號不明）將顯示為「查無資料（機型不明）」。",
+        xperia:"未明確對應上述系列的機型將顯示為「查無資料（機型不明）」。",
+        aquos:"未明確對應上述系列的機型將顯示為「查無資料（機型不明）」。",
+        motorola:"未明確對應上述系列的機型將顯示為「查無資料（機型不明）」。",
+        xiaomi:"僅上述列出之機型支援，其餘機型皆不支援。",
+        oppo:"僅上述列出之機型支援，字尾為「Lite」之機型原則上不支援。",
+        vivo:"僅上述列出之機型支援，其餘機型皆不支援。",
+        huawei:"P40 Pro+ 與 P50 Pro 型號相近，但不支援，請特別留意。"
+      },
+      pixelFootnote:"美規 Pixel 10 / 10 Pro / 10 Pro XL 為 eSIM 專用機型。於香港販售之所有 Pixel 機型皆不支援 eSIM。"
+    },
+    ko: {
+      heroTitle:"eSIM 지원 확인",
+      heroSub:"출발 전, 내 스마트폰이 TabiSIM을 지원하는지 몇 초 만에 확인해 보세요.",
+      cardTitle:"eSIM 지원 기종 조회",
+      cardLead:"기종명을 입력하면 eSIM 지원 여부를 바로 알려드립니다.",
+      searchPlaceholder:"기종명을 입력하세요 (예: iPhone 15, Galaxy S24)",
+      searchAria:"기종명을 입력하세요",
+      searchHint:"제조사명과 모델명을 함께 입력하면 더 정확하게 확인할 수 있습니다.",
+      disclaimer:"본 정보는 TabiSIM의 자체 조사를 바탕으로 한 참고 정보이며, 지원을 보장하지 않습니다. 언락(SIM-free) 단말기를 대상으로 합니다. 궁금한 점은 언제든 고객센터로 문의해 주세요.",
+      listTitle:"브랜드별 지원 기종 목록",
+      listSub:"검색하지 않아도 제조사별로 지원 기종을 확인할 수 있습니다.",
+      iphoneOkH:"지원", iphoneNgH:"미지원",
+      iphoneFootnote:"※ 중국 본토 모델은 iPhone Air와 iPhone 17e만 지원합니다. 홍콩・마카오 일부 모델은 나노 SIM 사양으로 미지원입니다. iPhone 18 / Duo는 발표 직후로 사양이 변경될 수 있습니다.",
+      ipadOkH:"지원 (Wi-Fi+Cellular 모델만 해당)",
+      ipadFootnote:"Wi-Fi 전용 모델은 eSIM을 지원하지 않습니다. Apple Watch는 여행용 eSIM 자체를 설치할 수 없어 본 조회 대상에서 제외됩니다.",
+      versionNote:"데이터 업데이트: v1 (2026-09-23 확정)",
+      okH:"지원", ngH:"미지원", supportedModelsH:"지원 기종",
+      unitCount:function(n){ return n + "개"; },
+      badgeUnknownBrand:"해당 없음", badgeExcluded:"대상 외", badgeOk:"지원", badgeNg:"미지원", badgeUnknownModel:"해당 없음 (기종 불명)",
+      bodyUnknownBrand:"일치하는 기종을 찾지 못했습니다. 제조사명을 포함하여 다시 입력하시거나 고객센터로 문의해 주세요.",
+      bodyExcluded:"Apple Watch는 여행용 eSIM 자체를 설치할 수 없어 본 조회 대상에서 제외됩니다.",
+      bodyOk:"이 기종은 TabiSIM의 eSIM을 지원합니다. 설치를 진행해 볼까요.",
+      bodyNg:"이 기종은 현재 TabiSIM의 eSIM을 지원하지 않습니다.",
+      bodyUnknownModel:function(brandLabel){ return brandLabel + " 지원 목록과 명확히 일치하지 않습니다. 모델명을 다시 확인해 주세요. 구형 시리즈이거나 인식되지 않는 기종일 수 있습니다."; },
+      noteUnknownModel:"판매 지역, 모델명, 통신사에 따라 지원 여부가 다를 수 있습니다. 궁금한 점은 고객센터로 문의해 주세요.",
+      btnGuide:"설치 가이드 보기", btnSupport:"고객센터 문의",
+      titleQuoted:function(q){ return "“" + q + "”"; },
+      brands:{iphone:"iPhone", ipad:"iPad", pixel:"Google Pixel", watch:"Apple Watch", galaxy:"Samsung Galaxy", xperia:"Sony Xperia", aquos:"AQUOS (샤프)", motorola:"Motorola", xiaomi:"Xiaomi / Redmi / POCO", oppo:"OPPO", vivo:"Vivo", huawei:"Huawei"},
+      androidNotes:{
+        galaxy:"위 시리즈에 명확히 일치하지 않는 기종(구형 시리즈・모델명 불명 포함)은 “해당 없음 (기종 불명)”으로 표시됩니다.",
+        xperia:"위 시리즈에 명확히 일치하지 않는 기종은 “해당 없음 (기종 불명)”으로 표시됩니다.",
+        aquos:"위 시리즈에 명확히 일치하지 않는 기종은 “해당 없음 (기종 불명)”으로 표시됩니다.",
+        motorola:"위 시리즈에 명확히 일치하지 않는 기종은 “해당 없음 (기종 불명)”으로 표시됩니다.",
+        xiaomi:"위에 명시된 기종만 지원하며, 그 외 기종은 모두 미지원입니다.",
+        oppo:"위에 명시된 기종만 지원하며, 끝에 “Lite”가 붙는 모델은 원칙적으로 미지원입니다.",
+        vivo:"위에 명시된 기종만 지원하며, 그 외 기종은 모두 미지원입니다.",
+        huawei:"P40 Pro+ / P50 Pro는 모델명이 비슷하지만 미지원이니 주의해 주세요."
+      },
+      pixelFootnote:"미국판 Pixel 10 / 10 Pro / 10 Pro XL은 eSIM 전용입니다. 홍콩에서 판매되는 모든 Pixel 모델은 eSIM을 지원하지 않습니다."
+    }
+  };
+
+  var currentLang = "ja";
+  function t(){ return I18N[currentLang]; }
+  function bl(key){ return (t().brands && t().brands[key]) || (DB[key] && DB[key].brandLabel) || key; }
 
   // ---------- render result ----------
   var resultEl = document.getElementById("result");
@@ -467,9 +709,12 @@
   var actionsEl = document.getElementById("result-actions");
 
   var CS_URL = "https://tabisim.jp/support";
-  var GUIDE_URL = "https://tabisim.jp/ja/install";
+  function guideUrl(){ return "/" + currentLang + "/install"; }
+
+  var lastResult = null, lastQuery = "";
 
   function renderResult(r, query){
+    lastResult = r; lastQuery = query || "";
     resultEl.classList.remove("ok","ng","unk");
     actionsEl.innerHTML = "";
     noteEl.hidden = true;
@@ -481,42 +726,42 @@
 
     if (r.status === "unknown_brand"){
       resultEl.classList.add("show","unk");
-      badgeEl.textContent = "該当なし";
-      titleEl.textContent = "「" + query + "」";
-      bodyEl.textContent = "対応リストに一致する機種が見つかりませんでした。メーカー名を含めて再度お試しいただくか、サポートまでお問い合わせください。";
+      badgeEl.textContent = t().badgeUnknownBrand;
+      titleEl.textContent = t().titleQuoted(query);
+      bodyEl.textContent = t().bodyUnknownBrand;
       addCsButton();
       return;
     }
     if (r.status === "excluded"){
       resultEl.classList.add("show","unk");
-      badgeEl.textContent = "対象外";
-      titleEl.textContent = r.brand.brandLabel;
-      bodyEl.textContent = "Apple Watchは本チェッカーの対象外です。旅行用eSIM自体をインストールできないためです。";
+      badgeEl.textContent = t().badgeExcluded;
+      titleEl.textContent = bl(r.brandKey);
+      bodyEl.textContent = t().bodyExcluded;
       return;
     }
     if (r.status === "ok"){
       resultEl.classList.add("show","ok");
-      badgeEl.textContent = "対応";
+      badgeEl.textContent = t().badgeOk;
       titleEl.textContent = query;
-      bodyEl.textContent = "この機種はTabiSIMのeSIMに対応しています。インストール手順に進みましょう。";
+      bodyEl.textContent = t().bodyOk;
       addGuideButton();
       return;
     }
     if (r.status === "ng"){
       resultEl.classList.add("show","ng");
-      badgeEl.textContent = "非対応";
+      badgeEl.textContent = t().badgeNg;
       titleEl.textContent = query;
-      bodyEl.textContent = "この機種は現在TabiSIMのeSIMに対応していません。";
+      bodyEl.textContent = t().bodyNg;
       addCsButton();
       return;
     }
     if (r.status === "unknown_model"){
       resultEl.classList.add("show","unk");
-      badgeEl.textContent = "該当なし（不明機種）";
+      badgeEl.textContent = t().badgeUnknownModel;
       titleEl.textContent = query;
-      bodyEl.textContent = r.brand.brandLabel + "の対応リストに明確に一致しませんでした。旧世代シリーズや型番不明の機種の可能性があります。";
+      bodyEl.textContent = t().bodyUnknownModel(bl(r.brandKey));
       noteEl.hidden = false;
-      noteEl.textContent = "販売国・型番・キャリアにより対応状況が異なる場合があります。ご不明な場合はサポートへお問い合わせください。";
+      noteEl.textContent = t().noteUnknownModel;
       addCsButton();
       return;
     }
@@ -525,15 +770,15 @@
   function addGuideButton(){
     var a = document.createElement("a");
     a.className = "btn btn-primary";
-    a.href = GUIDE_URL;
-    a.textContent = "インストール手順を見る";
+    a.href = guideUrl();
+    a.textContent = t().btnGuide;
     actionsEl.appendChild(a);
   }
   function addCsButton(){
     var a = document.createElement("a");
     a.className = "btn btn-outline";
     a.href = CS_URL;
-    a.textContent = "サポートに問い合わせる";
+    a.textContent = t().btnSupport;
     actionsEl.appendChild(a);
   }
 
@@ -558,40 +803,35 @@
   function fillChips(id, items, ng){
     var el = document.getElementById(id);
     if (!el) return;
-    items.forEach(function(t){ el.appendChild(chip(t, ng)); });
+    el.innerHTML = "";
+    items.forEach(function(m){ el.appendChild(chip(m, ng)); });
   }
 
-  fillChips("iphone-ok", DB.iphone.supportedDisplay, false);
-  fillChips("iphone-ng", DB.iphone.unsupported, true);
-  document.getElementById("iphone-count").textContent = (DB.iphone.supportedDisplay.length) + "件";
+  function renderAppleStatic(){
+    fillChips("iphone-ok", DB.iphone.supportedDisplay, false);
+    fillChips("iphone-ng", DB.iphone.unsupported, true);
+    document.getElementById("iphone-count").textContent = t().unitCount(DB.iphone.supportedDisplay.length);
 
-  fillChips("ipad-ok", DB.ipad.list, false);
-  document.getElementById("ipad-count").textContent = DB.ipad.list.length + "件";
+    fillChips("ipad-ok", DB.ipad.list, false);
+    document.getElementById("ipad-count").textContent = t().unitCount(DB.ipad.list.length);
+  }
 
-  // Android panel (built lazily on first tab switch)
+  // Android panel (built lazily on first tab switch; rebuilt on language change)
   var androidBuilt = false;
+  var ANDROID_ORDER = ["galaxy","xperia","aquos","motorola","xiaomi","oppo","vivo","huawei"];
   function buildAndroidPanel(){
-    if (androidBuilt) return;
     androidBuilt = true;
     var panel = document.getElementById("panel-android");
-    var order = [
-      {key:"galaxy", note:"上記系列に明確に一致しない機種（旧世代シリーズ・型番不明を含む）は「該当なし（不明機種）」として表示されます。"},
-      {key:"xperia", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
-      {key:"aquos", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
-      {key:"motorola", note:"上記系列に明確に一致しない機種は「該当なし（不明機種）」として表示されます。"},
-      {key:"xiaomi", note:"上記に明記された機種のみ対応。それ以外はすべて非対応です。"},
-      {key:"oppo", note:"上記に明記された機種のみ対応。末尾「Lite」モデルは原則非対応です。"},
-      {key:"vivo", note:"上記に明記された機種のみ対応。それ以外はすべて非対応です。"},
-      {key:"huawei", note:"P40 Pro+ / P50 Proは型番が似ていますが非対応です。ご注意ください。"}
-    ];
-    order.forEach(function(o){
-      var b = DB[o.key];
+    panel.innerHTML = "";
+
+    ANDROID_ORDER.forEach(function(key){
+      var b = DB[key];
       var d = document.createElement("details");
       d.className = "brand-group";
-      var body = '<div class="sub"><h4>対応機種</h4><div class="chip-row">' +
-        b.list.map(function(t){return '<span class="chip">'+t+'</span>';}).join("") +
-        '</div></div><p class="group-footnote">'+o.note+'</p>';
-      d.innerHTML = '<summary>'+b.brandLabel+' <span class="count">'+b.list.length+'件</span>' +
+      var body = '<div class="sub"><h4>' + t().supportedModelsH + '</h4><div class="chip-row">' +
+        b.list.map(function(m){return '<span class="chip">'+m+'</span>';}).join("") +
+        '</div></div><p class="group-footnote">' + (t().androidNotes[key] || "") + '</p>';
+      d.innerHTML = '<summary>' + bl(key) + ' <span class="count">' + t().unitCount(b.list.length) + '</span>' +
         '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
         '<div class="group-body">'+body+'</div>';
       panel.appendChild(d);
@@ -599,13 +839,13 @@
 
     var pixelDetails = document.createElement("details");
     pixelDetails.className = "brand-group";
-    pixelDetails.innerHTML = '<summary>Google Pixel <span class="count">'+DB.pixel.supportedDisplay.length+'件</span>' +
+    pixelDetails.innerHTML = '<summary>' + bl("pixel") + ' <span class="count">' + t().unitCount(DB.pixel.supportedDisplay.length) + '</span>' +
       '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>' +
-      '<div class="group-body"><div class="sub"><h4>対応</h4><div class="chip-row">' +
-      DB.pixel.supportedDisplay.map(function(t){return '<span class="chip">'+t+'</span>';}).join("") +
-      '</div></div><div class="sub"><h4>非対応</h4><div class="chip-row">' +
-      DB.pixel.unsupported.map(function(t){return '<span class="chip ng">'+t+'</span>';}).join("") +
-      '</div></div><p class="group-footnote">米国版Pixel 10/10 Pro/10 Pro XLはeSIM専用です。香港で販売されるPixel全モデルはeSIM非対応です。</p></div>';
+      '<div class="group-body"><div class="sub"><h4>' + t().okH + '</h4><div class="chip-row">' +
+      DB.pixel.supportedDisplay.map(function(m){return '<span class="chip">'+m+'</span>';}).join("") +
+      '</div></div><div class="sub"><h4>' + t().ngH + '</h4><div class="chip-row">' +
+      DB.pixel.unsupported.map(function(m){return '<span class="chip ng">'+m+'</span>';}).join("") +
+      '</div></div><p class="group-footnote">' + t().pixelFootnote + '</p></div>';
     panel.prepend(pixelDetails);
   }
 
@@ -613,18 +853,101 @@
   var tabs = document.querySelectorAll(".tab");
   var panelApple = document.getElementById("panel-apple");
   var panelAndroid = document.getElementById("panel-android");
-  tabs.forEach(function(t){
-    t.addEventListener("click", function(){
+  tabs.forEach(function(tb){
+    tb.addEventListener("click", function(){
       tabs.forEach(function(x){x.classList.remove("active");});
-      t.classList.add("active");
-      if (t.dataset.tab === "apple"){
+      tb.classList.add("active");
+      if (tb.dataset.tab === "apple"){
         panelApple.hidden = false; panelAndroid.hidden = true;
       } else {
-        buildAndroidPanel();
+        if (!androidBuilt) buildAndroidPanel();
         panelApple.hidden = true; panelAndroid.hidden = false;
       }
     });
   });
+
+  // ---------- i18n apply ----------
+  var STATIC_TEXT_IDS = {
+    "t-hero-title":"heroTitle","t-hero-sub":"heroSub","t-card-title":"cardTitle","t-card-lead":"cardLead",
+    "t-search-hint":"searchHint","t-disclaimer":"disclaimer","t-list-title":"listTitle","t-list-sub":"listSub",
+    "t-iphone-ok-h":"iphoneOkH","t-iphone-ng-h":"iphoneNgH","t-iphone-footnote":"iphoneFootnote",
+    "t-ipad-ok-h":"ipadOkH","t-ipad-footnote":"ipadFootnote","t-version-note":"versionNote"
+  };
+  function applyStaticText(){
+    Object.keys(STATIC_TEXT_IDS).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = t()[STATIC_TEXT_IDS[id]];
+    });
+    var searchInput = document.getElementById("search-input");
+    searchInput.setAttribute("placeholder", t().searchPlaceholder);
+    searchInput.setAttribute("aria-label", t().searchAria);
+  }
+
+  function applyLang(lang){
+    if (!I18N[lang]) return;
+    currentLang = lang;
+    try { document.documentElement.setAttribute("lang", lang === "zh-hant" ? "zh-Hant" : lang); } catch(e){}
+    applyStaticText();
+    renderAppleStatic();
+    if (androidBuilt) buildAndroidPanel();
+    if (lastResult) { renderResult(lastResult, lastQuery); } else { renderResult(null); }
+
+    var items = document.querySelectorAll(".lang-item");
+    items.forEach(function(el){
+      el.classList.toggle("active", el.dataset.lang === lang);
+    });
+    try { localStorage.setItem("tabisim_check_lang", lang); } catch(e){}
+  }
+
+  // ---------- language menu ----------
+  var langBtn = document.getElementById("lang-btn");
+  var langMenu = document.getElementById("lang-menu");
+  function closeLangMenu(){
+    langMenu.hidden = true;
+    langBtn.setAttribute("aria-expanded","false");
+  }
+  langBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var willOpen = langMenu.hidden;
+    langMenu.hidden = !willOpen;
+    langBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  });
+  document.querySelectorAll(".lang-item").forEach(function(el){
+    el.addEventListener("click", function(){
+      applyLang(el.dataset.lang);
+      closeLangMenu();
+    });
+  });
+  document.addEventListener("click", function(e){
+    if (!langMenu.hidden && !langMenu.contains(e.target) && e.target !== langBtn) closeLangMenu();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") closeLangMenu();
+  });
+
+  // ---------- initial language detection ----------
+  // 1) URL path (/en/, /zh-hant/, /ko/, /ja/) — GitHub Pages言語別ディレクトリ運用を想定
+  // 2) このプレビュー内で以前選んだ言語（localStorage）
+  // 3) ブラウザの言語設定
+  // 4) 既定値: 日本語
+  function detectInitialLang(){
+    var path = location.pathname.toLowerCase();
+    for (var i=0;i<LANG_KEYS.length;i++){
+      if (path.indexOf("/" + LANG_KEYS[i] + "/") !== -1) return LANG_KEYS[i];
+    }
+    try {
+      var saved = localStorage.getItem("tabisim_check_lang");
+      if (saved && I18N[saved]) return saved;
+    } catch(e){}
+    var nav = (navigator.language || "ja").toLowerCase();
+    if (nav.indexOf("zh") === 0) return "zh-hant";
+    if (nav.indexOf("ko") === 0) return "ko";
+    if (nav.indexOf("en") === 0) return "en";
+    return "ja";
+  }
+  var LANG_KEYS = ["ja","en","zh-hant","ko"];
+
+  applyLang(detectInitialLang());
 })();
 </script>
 

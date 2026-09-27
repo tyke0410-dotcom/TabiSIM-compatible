@@ -1,441 +1,1066 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+<title>データ使用量ガイド</title>
+<style>
+  :root{
+    --brand-brown:#2A2118;
+    --brand-gold:#C4A44A;
+
+    --brown-50:#f5f2ee;
+    --brown-100:#e9e2da;
+    --brown-200:#d6c9ba;
+    --brown-300:#b9a48d;
+    --brown-400:#93795e;
+    --brown-500:#6b5645;
+    --brown-600:#4d3c30;
+    --brown-700:#382c23;
+    --brown-800:#28201a;
+    --brown-900:#1c1712;
+
+    --gold-100:#efe1bd;
+    --gold-200:#e0c98c;
+    --gold-300:#d3b56a;
+    --gold-400:#c4a44a;
+    --gold-600:#96772f;
+    --gold-700:#725923;
+    --gradient-dawn: linear-gradient(160deg,#f7f2e9 0%,#efe1bd 55%,#d3b56a 100%);
+
+    --cream-0:#fbf9f5;
+    --cream-50:#f7f2e9;
+    --cream-100:#f1e9da;
+    --cream-200:#e6d9c2;
+
+    --success:#3f7a4e;
+    --success-bg:#e7f2e9;
+    --warning:#a6690f;
+    --warning-bg:#faf0dd;
+    --info:#3d6f96;
+    --info-bg:#e7f0f5;
+
+    --surface-page:var(--cream-0);
+    --surface-card:#ffffff;
+    --surface-sunken:var(--cream-50);
+    --surface-brand:var(--brand-brown);
+
+    --text-primary:var(--brown-900);
+    --text-secondary:var(--brown-500);
+    --text-tertiary:var(--brown-300);
+    --text-on-brand:var(--cream-0);
+
+    --border-subtle:var(--cream-200);
+    --border-default:var(--brown-200);
+    --border-accent:var(--brand-gold);
+
+    --radius-sm:6px;
+    --radius-md:10px;
+    --radius-card:14px;
+    --radius-pill:999px;
+
+    --shadow-sm:0 1px 2px rgba(42,33,24,.08);
+    --shadow-md:0 4px 12px rgba(42,33,24,.10),0 1px 3px rgba(42,33,24,.08);
+    --shadow-gold-glow:0 6px 20px rgba(196,164,74,.35);
+
+    --font-sans:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', Arial, sans-serif;
+    --font-serif-accent:'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', Arial, sans-serif;
+
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,h2,h3{ text-wrap: balance; margin: 0; }
+
+  a,button{ font: inherit; }
+  :focus-visible{ outline: 2px solid var(--brand-gold); outline-offset: 2px; }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding-inline: 20px;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{
+    background: transparent;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+    padding-bottom: 12px;
+    position: relative;
+  }
+  .top-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 12px;
+  }
+  .logo{
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo img{ height: 38px; width:auto; display:block; }
+  .logo-fallback{
+    font-family: var(--font-serif-accent);
+    font-size: 26px;
+    letter-spacing: .02em;
+    color: var(--text-primary);
+  }
+  .top-actions{ display:flex; align-items:center; gap:8px; position:relative; }
+  .icon-btn{
+    width:36px; height:36px;
+    display:flex; align-items:center; justify-content:center;
+    border-radius:50%;
+    border:1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-primary);
+    cursor:pointer;
+  }
+  .icon-btn svg{ width:18px; height:18px; }
+  .icon-btn:hover{ border-color: var(--border-accent); }
+  .dropdown{
+    position:absolute; top:calc(100% + 8px); right:0;
+    background: var(--surface-card);
+    border:1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    min-width:160px;
+    padding:6px;
+    display:none;
+    z-index:30;
+  }
+  .dropdown.open{ display:block; }
+  .dropdown button, .dropdown a{
+    display:block;
+    width:100%;
+    text-align:left;
+    font-family: var(--font-sans);
+    font-size:13.5px;
+    padding:9px 10px;
+    border-radius: var(--radius-sm);
+    border:none;
+    background:none;
+    color: var(--text-secondary);
+    text-decoration:none;
+    cursor:pointer;
+  }
+  .dropdown button[aria-current="true"]{ color: var(--text-primary); font-weight:600; background: var(--surface-sunken); }
+  .dropdown button:hover, .dropdown a:hover{ background: var(--surface-sunken); }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding-block: 30px 20px; }
+  .hero h1{
+    font-family: var(--font-serif-accent);
+    font-size: 28px;
+    line-height: 1.35;
+    color: var(--text-primary);
+  }
+  .hero p{
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 15px;
+    max-width: 46ch;
+  }
+
+  .quicknav{
+    display:flex; gap:8px; flex-wrap:wrap;
+    margin-top:18px;
+  }
+  .quicknav a{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size: 13px; font-weight:500;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-primary);
+    text-decoration:none;
+  }
+  .quicknav a svg{ width:15px; height:15px; color:var(--gold-700); }
+  .quicknav a:hover{ border-color: var(--border-accent); }
+
+  /* ---------- Section heading ---------- */
+  .section{ padding-block: 8px 32px; }
+  .section-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 16px;
+  }
+  .section-head .num{
+    display:flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:50%;
+    background: var(--brand-brown); color: var(--text-on-brand);
+    font-size:13px; font-weight:600; flex-shrink:0;
+  }
+  .section-head .num svg{ width:14px; height:14px; }
+  .section-head h2{
+    font-size: 18px; font-weight: 700; color: var(--text-primary);
+  }
+  /* ---------- Segmented tabs (OS switcher) ---------- */
+  .segmented{
+    display:flex;
+    border-bottom: 1px solid var(--border-subtle);
+    gap: 22px;
+  }
+  .segmented button{
+    display:flex; align-items:center; gap:6px;
+    font-family: var(--font-sans);
+    font-size: 15px; font-weight:500;
+    padding: 4px 2px 12px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: transparent;
+    color: var(--text-tertiary);
+    cursor:pointer;
+  }
+  .segmented button svg{ width:16px; height:16px; flex-shrink:0; }
+  .segmented button[aria-selected="true"]{
+    color: var(--text-primary);
+    font-weight:700;
+    border-bottom-color: var(--text-primary);
+  }
+
+  .subtabs{
+    display:flex; gap:8px; margin: 16px 0 18px; flex-wrap:wrap;
+  }
+  .subtabs button{
+    font-family: var(--font-sans);
+    font-size: 13px; font-weight:500;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    cursor:pointer;
+  }
+  .subtabs button[aria-selected="true"]{
+    border-color: var(--brand-brown);
+    background: var(--brand-brown);
+    color: var(--text-on-brand);
+  }
+
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---------- Step head (badge + label above screenshot) ---------- */
+  .step-head{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:14px;
+  }
+  .step-badge{
+    flex-shrink:0;
+    width:26px; height:26px;
+    border-radius:50%;
+    background: var(--danger, #c0392b);
+    color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; font-weight:700;
+    font-variant-numeric: tabular-nums;
+  }
+  .step-label{ font-size:15px; font-weight:600; color:var(--text-primary); }
+
+  /* ---------- Screenshot walkthrough ---------- */
+  .shot-carousel{
+    display:flex; gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    padding: 2px 2px 8px;
+    margin: 0 -2px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex:1 1 auto;
+    min-width:0;
+    justify-content:center;
+  }
+  .shot-carousel::-webkit-scrollbar{ display:none; }
+  .shot-slide{
+    flex:0 0 100%;
+    max-width:280px;
+    scroll-snap-align:center;
+    display:flex; flex-direction:column;
+  }
+  .shot-frame{
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid var(--border-subtle);
+    box-shadow: var(--shadow-sm);
+    background: var(--surface-sunken);
+    max-width: 260px;
+    margin: 0 auto;
+  }
+  .shot-frame img{ display:block; width:100%; height:auto; }
+  .shot-viewport{
+    display:flex; align-items:center; gap:8px;
+  }
+  .shot-nav{
+    flex-shrink:0;
+    width:32px; height:32px;
+    border-radius:50%;
+    border:1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+  }
+  .shot-nav svg{ width:16px; height:16px; }
+  .shot-nav:hover{ border-color: var(--border-accent); color: var(--text-primary); }
+  .shot-dots{ display:flex; justify-content:center; gap:6px; margin-top:14px; }
+  .shot-dots span{ width:6px; height:6px; border-radius:50%; background:var(--border-default); transition: all .18s ease; }
+  .shot-dots span.active{ background: var(--brand-gold); width:16px; border-radius:3px; }
+
+  .card{
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm);
+    padding: 18px 20px;
+  }
+
+  .device-note{
+    display:flex; gap:8px; align-items:flex-start;
+    margin-top:14px;
+    font-size: 13px; color: var(--text-secondary);
+  }
+  .device-note svg{ width:15px; height:15px; flex-shrink:0; margin-top:2px; color:var(--text-tertiary); }
+
+  /* ---------- Callout boxes ---------- */
+  .callout{
+    display:flex; gap:12px;
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    margin-top: 18px;
+  }
+  .callout svg{ width:20px; height:20px; flex-shrink:0; margin-top:1px; }
+  .callout h3{ font-size:14.5px; font-weight:700; margin-bottom:4px; }
+  .callout p{ font-size:13.5px; color: var(--text-secondary); margin:0; }
+  .callout.warning{ background: var(--warning-bg); }
+  .callout.warning svg{ color: var(--warning); }
+  .callout.warning h3{ color:#7a4e0b; }
+  .callout.info{ background: var(--info-bg); }
+  .callout.info svg{ color: var(--info); }
+  .callout.info h3{ color:#2c526f; }
+
+  /* ---------- FAQ ---------- */
+  .faq-item{
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .faq-item:last-child{ border-bottom:none; }
+  .faq-q{
+    width:100%;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:none; border:none;
+    font-family: var(--font-sans);
+    text-align:left;
+    padding: 15px 2px;
+    font-size: 14.5px; font-weight:600; color:var(--text-primary);
+    cursor:pointer;
+  }
+  .faq-q svg{
+    width:18px; height:18px; flex-shrink:0; color:var(--text-tertiary);
+    transition: transform .18s var(--ease-out, ease);
+  }
+  .faq-q[aria-expanded="true"] svg{ transform: rotate(180deg); }
+  .faq-a{
+    max-height:0; overflow:hidden;
+    transition: max-height .22s var(--ease-out, ease);
+  }
+  .faq-a-inner{
+    font-size: 13.5px; color: var(--text-secondary);
+    padding: 0 2px 16px;
+  }
+
+  /* ---------- Divider ---------- */
+  .divider{
+    display:flex; align-items:center; gap:14px;
+    margin: 8px 0 28px;
+  }
+  .divider::before,.divider::after{
+    content:""; flex:1; height:1px; background:var(--border-default);
+  }
+  .divider span{
+    font-family: var(--font-serif-accent);
+    font-size: 16px; color: var(--text-secondary);
+    white-space:nowrap;
+  }
+
+  /* ---------- Top-up CTA ---------- */
+  .cta-card{
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-sm);
+    padding: 22px 20px;
+  }
+  .cta-card h3{ font-size:16px; font-weight:700; margin-bottom:6px; }
+  .cta-card p{ font-size:14px; color:var(--text-secondary); margin:0 0 18px; }
+  .cta-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    width:100%;
+    background: linear-gradient(135deg,#d3b56a 0%,var(--gold-600) 100%);
+    color: var(--brown-900);
+    font-weight:700; font-size:15px;
+    padding: 13px 20px;
+    border-radius: var(--radius-pill);
+    text-decoration:none;
+    box-shadow: var(--shadow-gold-glow);
+  }
+  .cta-btn svg{ width:17px; height:17px; }
+
+  /* ---------- Support ---------- */
+  .support{
+    margin-top: 16px;
+  }
+  .line-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    width:100%;
+    background: #4CAF50;
+    color:#ffffff;
+    font-weight:700; font-size:15px;
+    padding: 13px 20px;
+    border-radius: var(--radius-pill);
+    text-decoration:none;
+  }
+  .line-btn svg{ width:19px; height:19px; }
+  .line-btn:hover{ background:#449d48; }
+
+  /* ---------- Feedback ---------- */
+  .feedback{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    flex-wrap:wrap;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+    padding: 16px 18px;
+    margin-top: 26px;
+  }
+  .feedback p{ margin:0; font-size:14px; font-weight:600; color:var(--text-primary); }
+  .feedback-btns{ display:flex; gap:8px; }
+  .fb-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:38px; height:38px;
+    border-radius:50%;
+    border:1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-secondary);
+    cursor:pointer;
+  }
+  .fb-btn svg{ width:17px; height:17px; }
+  .fb-btn:hover{ border-color: var(--border-accent); color: var(--text-primary); }
+  .fb-btn.picked{ background: var(--gold-100); border-color: var(--border-accent); color: var(--gold-700); }
+  .feedback.done p{ color: var(--success); }
+
+  /* ---------- Footer ---------- */
+  footer{
+    background: var(--brand-brown);
+    color: var(--brown-200);
+    margin-top: 10px;
+    padding-block: 22px calc(env(safe-area-inset-bottom, 0px) + 22px);
+  }
+  .foot-links{
+    display:flex; gap:18px; flex-wrap:wrap;
+    font-size:13px; margin-bottom:14px;
+  }
+  .foot-links a{ color: var(--cream-0); text-decoration:none; }
+  .foot-links a:hover{ color: var(--gold-300); }
+  footer .fine{ font-size:11.5px; color: var(--brown-300); }
+
+  @media (max-width: 380px){
+    .hero h1{ font-size: 26px; }
+  }
+</style>
 </head>
 <body>
-<x-dc>
-<helmet>
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/colors.css">
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/typography.css">
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/spacing.css">
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/radius-shadow.css">
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/tokens/gradients.css">
-  <link rel="stylesheet" href="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/styles.css">
-  <script src="_ds/tabisim-design-system-ba47b8b2-4b92-44fd-8faa-b7bdf183e005/_ds_bundle.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    body{margin:0;background:var(--surface-page);}
-    a{color:var(--text-link);text-decoration:none;}
-    a:hover{color:var(--text-link-hover);}
-    * { box-sizing: border-box; }
-  </style>
-</helmet>
-<div style="min-height:100vh;background:var(--surface-page);font-family:var(--font-ui);color:var(--text-primary);">
 
-  <header style="position:sticky;top:0;z-index:10;background:rgba(255,255,255,0.9);backdrop-filter:blur(6px);border-bottom:1px solid var(--border-subtle);">
-    <div style="max-width:680px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
-      <img src="assets/tabisim-logo.png" alt="TabiSIM" style="height:44px;width:auto;">
-      <div style="display:flex;align-items:center;gap:8px;">
-      <div style="position:relative;">
-        <button onClick="{{ toggleLangMenu }}" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border-default);background:var(--surface-card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);">
-          <i data-lucide="globe" style="width:18px;height:18px;"></i>
-        </button>
-        <sc-if value="{{ langMenuOpen }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute;top:calc(100% + 8px);right:0;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-md);overflow:hidden;min-width:140px;z-index:20;">
-            <sc-for list="{{ langs }}" as="l" hint-placeholder-count="4">
-              <div onClick="{{ l.onSelect }}" style="{{ l.menuStyle }}">{{ l.label }}</div>
-            </sc-for>
-          </div>
-        </sc-if>
+<header class="top">
+  <div class="wrap">
+    <div class="top-row">
+      <div class="logo">
+        <img src="assets/tabisim-lockup.png" alt="TabiSIM" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="logo-fallback" style="display:none">TabiSIM</span>
       </div>
-        <div style="position:relative;">
-          <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="width:38px;height:38px;border-radius:50%;border:1px solid var(--border-default);background:var(--surface-card);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text-primary);">
-            <i data-lucide="menu" style="width:18px;height:18px;"></i>
-          </button>
-          <sc-if value="{{ navMenuOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;top:calc(100% + 8px);right:0;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-card);box-shadow:var(--shadow-md);overflow:hidden;min-width:240px;z-index:20;padding:6px;display:flex;flex-direction:column;gap:2px;">
-              <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="3">
-                <a href="{{ n.href }}" style="{{ n.style }}">
-                  <i data-lucide="{{ n.icon }}" style="width:18px;height:18px;flex-shrink:0;"></i>
-                  <span style="flex:1;">{{ n.label }}</span>
-                  <sc-if value="{{ n.current }}" hint-placeholder-val="{{ false }}">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--brand-gold);flex-shrink:0;"></span>
-                  </sc-if>
-                </a>
-              </sc-for>
-            </div>
-          </sc-if>
+      <div class="top-actions">
+        <button class="icon-btn" aria-haspopup="true" aria-expanded="false" onclick="toggleDropdown('lang-dropdown', this)" data-i18n-aria="aria.langSelect" aria-label="言語を選択">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18a14 14 0 0 1 0-18Z"/></svg>
+        </button>
+
+        <div class="dropdown" id="lang-dropdown" role="menu" aria-label="言語切り替え">
+          <button role="menuitem" aria-current="true" data-lang="ja">日本語</button>
+          <button role="menuitem" data-lang="en">English</button>
+          <button role="menuitem" data-lang="zh-hant">繁體中文</button>
+          <button role="menuitem" data-lang="ko">한국어</button>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <section style="text-align:center;padding:52px 24px 44px;background:linear-gradient(135deg, var(--ocean-100) 0%, var(--ocean-300) 28%, var(--gold-100) 62%, var(--brand-gold) 100%);position:relative;">
-    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;background:var(--brand-brown);color:#fff;padding:6px 16px;border-radius:var(--radius-pill);">{{ t.okinawaBadge }}</div>
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;background:rgba(255,255,255,0.6);color:var(--brand-brown);padding:6px 16px;border-radius:var(--radius-pill);display:inline-flex;align-items:center;gap:5px;">
-        <i data-lucide="zap" style="width:12px;height:12px;"></i>{{ t.heroTimeBadge }}
+<main class="wrap">
+
+  <section class="hero">
+    <h1 data-i18n="hero.title">データ使用量の確認方法</h1>
+    <p data-i18n="hero.desc">残りのデータ量は、スマホの設定画面からいつでも確認できます。</p>
+  </section>
+
+  <section class="section" id="usage-check">
+    <div class="section-head">
+      <span class="num">1</span>
+      <h2 data-i18n="section1.title">データ残量を確認する</h2>
+    </div>
+
+    <div class="segmented" role="tablist" aria-label="OS選択">
+      <button role="tab" id="tab-ios" aria-controls="panel-ios" aria-selected="true" onclick="selectOS('ios')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.2"/><line x1="10.5" y1="18.3" x2="13.5" y2="18.3"/></svg>
+        iPhone (iOS)
+      </button>
+      <button role="tab" id="tab-android" aria-controls="panel-android" aria-selected="false" onclick="selectOS('android')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2.2"/><line x1="9" y1="6.3" x2="15" y2="6.3"/></svg>
+        Android
+      </button>
+    </div>
+
+    <!-- iOS panel -->
+    <div class="panel active" id="panel-ios" role="tabpanel" aria-labelledby="tab-ios">
+      <div class="card">
+        <div class="step-head">
+          <span class="step-badge" data-step-badge>1</span>
+          <span class="step-label" data-step-label>Cellular（モバイル通信）をタップ</span>
+        </div>
+        <div class="shot-viewport">
+          <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+          </button>
+          <div class="shot-carousel" data-carousel="ios" data-steps='["Cellular（モバイル通信）をタップ","Current Period（現在の期間）で使用量を確認","Reset Statistics（統計をリセット）で渡航前にリセット"]'>
+            <div class="shot-slide">
+              <div class="shot-frame">
+                <img src="shots/ios-1-cellular.webp" alt="設定画面。「Cellular」の項目が赤枠で囲まれている" loading="lazy">
+              </div>
+            </div>
+            <div class="shot-slide">
+              <div class="shot-frame">
+                <img src="shots/ios-2-current-period.webp" alt="Cellular画面。「Current Period」の使用データ量が赤枠で囲まれている" loading="lazy">
+              </div>
+            </div>
+            <div class="shot-slide">
+              <div class="shot-frame">
+                <img src="shots/ios-3-reset.webp" alt="Cellular画面を下にスクロールした先。「Reset Statistics」が赤枠で囲まれている" loading="lazy">
+              </div>
+            </div>
+          </div>
+          <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="shot-dots" aria-hidden="true"></div>
       </div>
     </div>
-    <h1 style="font-family:var(--font-display);font-size:40px;font-weight:700;margin:0 0 12px;line-height:1.15;color:var(--brand-brown);">{{ t.heroTitle }}</h1>
-    <p style="font-size:var(--text-md);color:var(--brown-700);margin:0 auto 28px;max-width:420px;line-height:var(--leading-relaxed);font-weight:500;">{{ t.heroSub }}</p>
-    <div style="display:inline-flex;gap:10px;background:rgba(255,255,255,0.5);padding:6px;border-radius:var(--radius-pill);">
-      <button onClick="{{ goIosSteps }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:var(--radius-pill);border:none;cursor:pointer;font-weight:700;font-size:var(--text-sm);background:{{ iosJumpBg }};color:{{ iosJumpColor }};">
-        <i data-lucide="apple" style="width:15px;height:15px;"></i>{{ t.iosGuideBtn }}
-      </button>
-      <button onClick="{{ goAndroidSteps }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 22px;border-radius:var(--radius-pill);border:none;cursor:pointer;font-weight:700;font-size:var(--text-sm);background:{{ androidJumpBg }};color:{{ androidJumpColor }};">
-        <i data-lucide="bot" style="width:15px;height:15px;"></i>{{ t.androidGuideBtn }}
-      </button>
+
+    <!-- Android panel -->
+    <div class="panel" id="panel-android" role="tabpanel" aria-labelledby="tab-android">
+      <div class="subtabs" role="tablist" aria-label="Androidメーカー選択">
+        <button role="tab" aria-selected="true" onclick="selectMaker('samsung', this)">Samsung</button>
+        <button role="tab" aria-selected="false" onclick="selectMaker('pixel', this)">Google Pixel</button>
+      </div>
+
+      <div class="card">
+        <!-- Samsung -->
+        <div class="maker-panel" data-maker="samsung">
+          <div class="step-head">
+            <span class="step-badge" data-step-badge>1</span>
+            <span class="step-label" data-step-label>Connections（接続）をタップ</span>
+          </div>
+          <div class="shot-viewport">
+            <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <div class="shot-carousel" data-carousel="samsung" data-steps='["Connections（接続）をタップ","Data usage（データ使用量）をタップ","Mobile data usage（モバイルデータ使用量）を確認"]'>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/samsung-1-settings.webp" alt="設定画面。「Connections」の項目が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/samsung-2-connections.webp" alt="Connections画面。「Data usage」の項目が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/samsung-3-usage.webp" alt="Data usage画面。「Mobile data usage」の欄が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+            </div>
+            <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="shot-dots" aria-hidden="true"></div>
+        </div>
+
+        <!-- Pixel -->
+        <div class="maker-panel" data-maker="pixel" hidden>
+          <div class="step-head">
+            <span class="step-badge" data-step-badge>1</span>
+            <span class="step-label" data-step-label>Network &amp; internet（ネットワーク）をタップ</span>
+          </div>
+          <div class="shot-viewport">
+            <button class="shot-nav" data-i18n-aria="aria.prev" aria-label="前の手順" onclick="navCarousel(this,-1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+            </button>
+            <div class="shot-carousel" data-carousel="pixel" data-steps='["Network &amp; internet（ネットワーク）をタップ","SIMs をタップ","使用データ量を確認"]'>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/pixel-1-settings.webp" alt="設定画面。「Network &amp; internet」の項目が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/pixel-2-sims.webp" alt="Network &amp; internet画面。「SIMs」の項目が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+              <div class="shot-slide">
+                <div class="shot-frame">
+                  <img src="shots/pixel-3-usage.webp" alt="SIM詳細画面。上部に使用データ量、下に「App data usage」の項目が赤枠で囲まれている" loading="lazy">
+                </div>
+              </div>
+            </div>
+            <button class="shot-nav" data-i18n-aria="aria.next" aria-label="次の手順" onclick="navCarousel(this,1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="shot-dots" aria-hidden="true"></div>
+        </div>
+
+        <div class="device-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v.01M12 11v5"/></svg>
+          <span data-i18n="deviceNote">上記2機種以外をお使いの場合も、「接続」または「ネットワークとインターネット」の中に「データ使用量」に近い項目があります。見つからない場合はサポートまでご連絡ください。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warning">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 2.6 17.5a1.8 1.8 0 0 0 1.6 2.7h15.6a1.8 1.8 0 0 0 1.6-2.7L13.7 3.9a1.8 1.8 0 0 0-3.4 0Z"/><path d="M12 9.5v4M12 17v.01"/></svg>
+      <div>
+        <h3 data-i18n="warning.title">渡航前に、データ使用量をリセットしておきましょう</h3>
+        <p data-i18n="warning.desc">他の回線の分と合算表示されるのを防げます（iOSは上のSTEP3）。</p>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span data-i18n="faq1.q">表示されている残量が、実際の使用感と合わない気がします</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner" data-i18n="faq1.a">数分ほど遅れて反映されることがあります。少し時間を置いてから確認してください。</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          <span data-i18n="faq2.q">「データ使用量」の項目が見当たりません</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-a">
+          <div class="faq-a-inner" data-i18n="faq2.a">機種により名称が異なります。見つからない場合はサポートまでご連絡ください。</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <main style="max-width:680px;margin:0 auto;padding:44px 20px 96px;">
+  <div class="divider"><span data-i18n="divider">データが足りなくなったら</span></div>
 
-    <section style="margin-bottom:40px;">
-      <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Card" padding="26px" hint-size="100%,auto">
-        <h2 style="font-size:var(--text-lg);font-weight:700;margin:0 0 18px;display:flex;align-items:center;gap:9px;">
-          <i data-lucide="list-checks" style="width:20px;height:20px;color:var(--brand-gold);"></i>{{ t.checklistTitle }}
-        </h2>
-        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:16px;">
-          <sc-for list="{{ t.checklist }}" as="item" hint-placeholder-count="3">
-            <div style="display:flex;align-items:flex-start;gap:12px;">
-              <div style="width:22px;height:22px;border-radius:50%;background:var(--success-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">
-                <i data-lucide="check" style="width:13px;height:13px;color:var(--success);"></i>
-              </div>
-              <span style="font-size:var(--text-base);line-height:var(--leading-normal);">{{ item }}</span>
-            </div>
-          </sc-for>
-        </div>
-        <a href="TabiSIM Compatibility Checker.dc.html" style="display:inline-flex;align-items:center;gap:6px;margin:0 0 18px 34px;font-size:var(--text-sm);font-weight:700;color:var(--brand-brown);">
-          {{ t.checkDeviceLink }}<i data-lucide="arrow-right" style="width:14px;height:14px;"></i>
-        </a>
-        <div style="background:var(--info-bg);border-radius:var(--radius-md);padding:14px 16px;display:flex;gap:10px;">
-          <i data-lucide="info" style="width:18px;height:18px;color:var(--info);flex-shrink:0;margin-top:1px;"></i>
-          <p style="margin:0;font-size:var(--text-sm);color:var(--text-primary);line-height:var(--leading-normal);white-space:pre-line;">{{ t.checklistNote }}</p>
-        </div>
-      </x-import>
-    </section>
+  <section class="section" id="topup" style="padding-top:0">
+    <div class="cta-card">
+      <h3 data-i18n="topup.title">eSIMにそのままデータを追加</h3>
+      <p data-i18n="topup.desc">Top-up（追加チャージ）は、tabisim.jpでプランを購入した方のみご利用いただけます。</p>
+      <a class="cta-btn" href="https://tabisim.jp/plans/japan" target="_blank" rel="noopener">
+        <span data-i18n="topup.cta">日本向けプランを見る</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M9 7h8v8"/></svg>
+      </a>
+    </div>
+  </section>
 
-    <section style="margin-bottom:40px;" id="install-steps">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
-        <h2 style="font-size:var(--text-lg);font-weight:700;margin:0;">{{ t.stepsTitle }}</h2>
-        <div style="display:inline-flex;background:var(--cream-100);padding:4px;border-radius:var(--radius-pill);">
-          <button onClick="{{ setIos }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-pill);border:none;cursor:pointer;font-weight:700;font-size:var(--text-sm);background:{{ iosTabBg }};color:{{ iosTabColor }};">
-            <i data-lucide="apple" style="width:14px;height:14px;"></i>iPhone
-          </button>
-          <button onClick="{{ setAndroid }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-pill);border:none;cursor:pointer;font-weight:700;font-size:var(--text-sm);background:{{ androidTabBg }};color:{{ androidTabColor }};">
-            <i data-lucide="bot" style="width:14px;height:14px;"></i>Android
-          </button>
-        </div>
+  <section class="section" id="support" style="padding-top:0">
+    <div class="section-head">
+      <span class="num">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 0 1 4.8.9c0 1.7-2.3 2-2.3 3.4"/><circle cx="12" cy="17" r="0.3" fill="currentColor" stroke="none"/></svg>
+      </span>
+      <h2 data-i18n="support.title">それでも解決しない場合</h2>
+    </div>
+    <div class="support">
+      <a class="line-btn" href="https://line.me/R/ti/p/%40tabisim" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C7 3 3 6.4 3 10.6c0 2.7 1.7 5.1 4.3 6.5-.2.9-.7 2.4-.8 2.8-.1.4.2.4.4.3.2-.1 2.6-1.7 3.6-2.4.5.1 1 .1 1.5.1 5 0 9-3.4 9-7.6S17 3 12 3Z"/></svg>
+        <span data-i18n="line.cta">LINE公式アカウントを追加</span>
+      </a>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <p id="feedback-text" data-i18n="feedback.q">このページは役に立ちましたか？</p>
+      <div class="feedback-btns">
+        <button class="fb-btn" data-i18n-aria="aria.helpful" aria-label="役に立った" onclick="sendFeedback(true, this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 10v11H4V10h3Zm0 0 4.5-7a1.8 1.8 0 0 1 3.2 1.4L13.5 10H19a2 2 0 0 1 1.9 2.7l-2 6A2 2 0 0 1 17 20H7"/></svg>
+        </button>
+        <button class="fb-btn" data-i18n-aria="aria.notHelpful" aria-label="役に立たなかった" onclick="sendFeedback(false, this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 14V3h3v11h-3Zm0 0-4.5 7a1.8 1.8 0 0 1-3.2-1.4L10.5 14H5a2 2 0 0 1-1.9-2.7l2-6A2 2 0 0 1 7 4h10"/></svg>
+        </button>
       </div>
+    </div>
+  </section>
+</main>
 
-      <div style="position:relative;padding-left:4px;">
-        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
-          <div style="display:flex;gap:18px;position:relative;">
-            <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;">
-              <div style="{{ s.circleStyle }}">{{ s.n }}</div>
-              <sc-if value="{{ s.hasNext }}" hint-placeholder-val="{{ true }}">
-                <div style="width:2px;flex:1;min-height:28px;background:var(--border-subtle);margin:4px 0;"></div>
-              </sc-if>
-            </div>
-            <div style="flex:1;min-width:0;padding-bottom:28px;">
-              <h3 style="font-size:var(--text-base);font-weight:700;margin:0 0 6px;">{{ s.title }}</h3>
-              <p style="margin:0 0 10px;font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal);">{{ s.desc }}</p>
-              <sc-if value="{{ s.mock }}" hint-placeholder-val="{{ false }}">
-                <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:var(--radius-md);background:var(--cream-100);">
-                  <i data-lucide="{{ s.mock.icon }}" style="width:15px;height:15px;color:var(--brand-brown);"></i>
-                  <span style="font-size:var(--text-sm);font-weight:600;">{{ s.mock.label }}</span>
-                </div>
-              </sc-if>
-            </div>
-          </div>
-        </sc-for>
-      </div>
-    </section>
+<footer>
+  <div class="wrap">
+    <div class="foot-links">
+      <a href="./install.html" data-i18n="header.menuInstall">インストールガイド</a>
+      <a href="./check.html" data-i18n="header.menuCheck">対応機種チェッカー</a>
+    </div>
+    <div class="fine">© TabiSIM / HENZA</div>
+  </div>
+</footer>
 
-    <section style="margin-bottom:40px;">
-      <h2 style="font-size:var(--text-lg);font-weight:700;margin:0 0 16px;">{{ t.faqTitle }}</h2>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-        <sc-for list="{{ faqItems }}" as="item" hint-placeholder-count="2">
-          <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Card" padding="0" hint-size="100%,auto">
-            <div onClick="{{ item.onToggle }}" style="padding:16px 20px;display:flex;gap:10px;align-items:flex-start;cursor:pointer;justify-content:space-between;">
-              <div style="display:flex;gap:10px;align-items:flex-start;">
-                <i data-lucide="help-circle" style="width:18px;height:18px;color:var(--text-tertiary);flex-shrink:0;margin-top:2px;"></i>
-                <span style="font-size:var(--text-base);font-weight:700;">{{ item.q }}</span>
-              </div>
-              <i data-lucide="{{ item.chevronIcon }}" style="width:18px;height:18px;color:var(--text-tertiary);flex-shrink:0;margin-top:2px;"></i>
-            </div>
-            <sc-if value="{{ item.open }}" hint-placeholder-val="{{ false }}">
-              <p style="margin:0;padding:0 20px 18px 48px;font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-normal);">{{ item.a }}</p>
-            </sc-if>
-          </x-import>
-        </sc-for>
-      </div>
-
-      <sc-if value="{{ osIsAndroid }}" hint-placeholder-val="{{ false }}">
-        <div style="border:1.5px solid var(--danger);background:var(--danger-bg);border-radius:var(--radius-card);padding:20px;">
-          <h3 style="font-size:var(--text-base);font-weight:700;margin:0 0 10px;display:flex;gap:10px;align-items:center;color:var(--danger);">
-            <span style="width:26px;height:26px;border-radius:50%;background:var(--danger);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i data-lucide="alert-triangle" style="width:14px;height:14px;"></i></span>{{ t.apnWarningTitle }}
-          </h3>
-          <p style="margin:0 0 10px;font-size:var(--text-sm);line-height:var(--leading-normal);color:var(--text-primary);">{{ t.apnIntro }}</p>
-          <p style="margin:0 0 14px;font-size:var(--text-sm);line-height:var(--leading-normal);color:var(--text-primary);">{{ t.apnSteps }}</p>
-          <div style="display:inline-flex;flex-direction:column;gap:4px;background:var(--surface-card);border-radius:var(--radius-md);padding:10px 16px;">
-            <span style="font-size:var(--text-xs);color:var(--text-tertiary);">{{ t.apnValueLabel }}</span>
-            <code style="font-size:var(--text-base);font-weight:700;color:var(--brand-brown);font-family:var(--font-ui);">{{ t.apnValueAndroid }}</code>
-          </div>
-        </div>
-      </sc-if>
-    </section>
-
-    <section>
-      <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Card" padding="26px" style="background:var(--brand-brown);border:none;" hint-size="100%,auto">
-        <h3 style="font-size: var(--text-lg); font-weight: 700; margin: 0 0 6px; color: #0B0B0B; font-family: var(--font-display)">{{ t.supportTitle }}</h3>
-        <p style="margin: 0 0 20px; font-size: var(--text-sm); color: #090909">{{ t.supportDesc }}</p>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Button" variant="secondary" size="md" icon="{{ lineIcon }}" hint-size="auto,44px">{{ t.supportWhatsapp }}</x-import>
-          <a href="mailto:support@tabisim.jp" style="text-decoration:none;">
-            <x-import component-from-global-scope="TabiSIMDesignSystem_ba47b8.Button" variant="ghost" size="md" style="background:transparent;color:var(--text-on-brand);border-color:var(--brown-500);" icon="{{ mailIcon }}" hint-size="auto,44px">{{ t.supportEmail }}</x-import>
-          </a>
-        </div>
-      </x-import>
-    </section>
-
-  </main>
-
-  <footer style="border-top:1px solid var(--border-subtle);padding:24px 20px;text-align:center;">
-    <p style="margin:0;font-size:var(--text-xs);color:var(--text-tertiary);">TabiSIM / HENZA</p>
-  </footer>
-</div>
-
-</x-dc>
-<script type="text/x-dc" data-dc-script>
-const LANGS = [
-  { code: 'ja', label: '日本語' },
-  { code: 'en', label: 'English' },
-  { code: 'zh-hant', label: '繁體中文' },
-  { code: 'ko', label: '한국어' },
-];
-
-const STEP_META = [
-  { icon: 'qr-code', warn: false, mock: null },
-  { icon: 'settings', warn: false, mockKey: 'mockAddEsim' },
-  { icon: 'check-circle-2', warn: false, mock: null },
-  { icon: 'globe', warn: true, mockKey: 'mockRoaming' },
-];
-
-const CONTENT = {
-  ja: {
-    okinawaBadge: 'OKINAWA',
-    heroTimeBadge: '約30秒で完了',
-    heroTitle: 'eSIMインストールガイド',
-    heroSub: 'For Traveller to OKINAWA',
-    iosGuideBtn: 'iPhoneガイド', androidGuideBtn: 'Androidガイド',
-    checklistTitle: 'はじめる前に',
-    checklist: ['Wi-Fiに接続していますか？', 'お使いの端末はeSIM対応機種ですか？', 'QRコード付きの確認メールを開いていますか？'],
-    checkDeviceLink: 'eSIM対応の確認はこちらから',
-    checklistNote: '沖縄到着前にインストールするのがおすすめです。到着後だと、\n通信環境によって読み取りに失敗することがあります。',
-    stepsTitle: 'Quick Installの手順',
-    iosSteps: [
-      { title: 'QRコード付きメールを開く', desc: '確認メール内のQRコードを表示します。' },
-      { title: 'クイックインストールでeSIMをインストール', desc: 'メール内のクイックインストールボタンをタップして、eSIMをインストールします。' },
-      { title: '「設定」>「モバイル通信」でプラン追加を確認', desc: '新しいeSIMプランが追加されていることを確認します。プラン名が分かりにくい場合は「沖縄eSIM」などに変更するのがおすすめです。', mockAddEsim: 'モバイル通信 > eSIMプラン' },
-      { title: '沖縄到着後、回線を切り替えて「データローミング」をON', desc: '沖縄に到着したら、モバイル通信で回線を沖縄用のeSIMプランに切り替え、「データローミング」を必ずONにしてください。', mockRoaming: 'データローミング' },
-    ],
-    androidSteps: [
-      { title: 'QRコード付きメールを開く', desc: '確認メール内のQRコードを表示します。' },
-      { title: 'クイックインストールでeSIMをインストール', desc: 'メール内のクイックインストールボタンをタップして、eSIMをインストールします。' },
-      { title: '「設定」>「ネットワークとインターネット」>「SIM」でプラン追加を確認', desc: '新しいeSIMプランが追加されていることを確認します。プラン名が分かりにくい場合は「沖縄eSIM」などに変更するのがおすすめです。', mockAddEsim: 'ネットワークとインターネット > SIM' },
-      { title: '沖縄到着後、回線を切り替えて「ローミング」をON', desc: '沖縄に到着したら、SIM設定で回線を沖縄用のeSIMプランに切り替え、「ローミング」を必ずONにしてください。', mockRoaming: 'ローミング' },
-    ],
-    faqTitle: 'よくある質問',
-    faq: [
-      { q: 'QRコードが読み取れません', a: '画面の明るさを上げ、QRコード全体がカメラ枠に収まるようにしてください。それでも読み取れない場合は上のボタンから再表示できます。' },
-      { q: '「すでにインストールされています」と表示されます', a: '同じQRコードは1回のみ使用できます。二重にインストールしようとすると表示されるエラーです。すでに接続できていれば、そのままお使いいただけます。' },
-    ],
-    apnWarningTitle: 'インストール済みなのにインターネットに繋がらない場合',
-    apnIntro: 'まれに、QRコードでのインストール後に誤った接続設定（APN）が自動で設定されることがあります。APNとは、スマートフォンが通信会社のネットワークに接続するための設定値です。',
-    apnSteps: '設定 > モバイル通信 > 該当のeSIMプラン > アクセスポイント名(APN) を開き、下の値を入力してください。',
-    apnValueLabel: 'Android向けAPN値', apnValueAndroid: 'vmobile.jp',
-    supportTitle: '解決しない場合', supportDesc: '沖縄ご滞在中もサポートチームがすぐにお答えします。',
-    supportWhatsapp: 'LINEで相談する', supportEmail: 'メールで相談する',
-  },
-  en: {
-    okinawaBadge: 'OKINAWA',
-    heroTimeBadge: 'About 30 seconds',
-    heroTitle: 'eSIM Installation Guide',
-    heroSub: "For Traveller to OKINAWA",
-    iosGuideBtn: 'iPhone Guide', androidGuideBtn: 'Android Guide',
-    checklistTitle: 'Before you start',
-    checklist: ['Are you connected to Wi-Fi?', 'Is your phone eSIM-compatible?', 'Do you have the confirmation email with your QR code open?'],
-    checkDeviceLink: 'Check your device here',
-    checklistNote: "We recommend installing after you land in Okinawa. Installing before departure can sometimes cause scanning issues depending on your home network.",
-    stepsTitle: 'Quick Install steps',
-    iosSteps: [
-      { title: 'Open the email with your QR code', desc: 'Open the QR code from your confirmation email.' },
-      { title: 'Install the eSIM via Quick Install', desc: 'Tap the Quick Install button in the email to install your eSIM.' },
-      { title: 'Check Settings > Cellular for the new plan', desc: 'Confirm the new eSIM plan has been added. If the plan name is hard to identify, we recommend renaming it to something like "Okinawa eSIM".', mockAddEsim: 'Cellular > eSIM plan' },
-      { title: 'After landing in Okinawa, switch lines and turn on Data Roaming', desc: 'Once you arrive in Okinawa, switch to the Okinawa eSIM plan under Cellular, and make sure to turn on Data Roaming.', mockRoaming: 'Data Roaming' },
-    ],
-    androidSteps: [
-      { title: 'Open the email with your QR code', desc: 'Open the QR code from your confirmation email.' },
-      { title: 'Install the eSIM via Quick Install', desc: 'Tap the Quick Install button in the email to install your eSIM.' },
-      { title: 'Check Settings > Network & internet > SIMs for the new plan', desc: 'Confirm the new eSIM plan has been added. If the plan name is hard to identify, we recommend renaming it to something like "Okinawa eSIM".', mockAddEsim: 'Network & internet > SIMs' },
-      { title: 'After landing in Okinawa, switch lines and turn on Roaming', desc: 'Once you arrive in Okinawa, switch to the Okinawa eSIM plan in your SIM settings, and make sure to turn on Roaming.', mockRoaming: 'Roaming' },
-    ],
-    faqTitle: 'Frequently asked questions',
-    faq: [
-      { q: "The QR code won't scan", a: 'Increase your screen brightness and make sure the whole QR code fits inside the camera frame. If it still doesn\'t work, use the button above to view it again.' },
-      { q: 'It says "already installed"', a: "Each QR code can only be used once. This message appears if you try to install it a second time. If you're already connected, you're all set." },
-    ],
-    apnWarningTitle: "Installed but not connecting to the internet?",
-    apnIntro: "In rare cases, Quick Install can set an incorrect connection setting called the APN. The APN tells your phone how to reach the carrier's network.",
-    apnSteps: 'Go to Settings > Cellular > your eSIM plan > APN, and enter the value below.',
-    apnValueLabel: 'APN value for Android', apnValueAndroid: 'vmobile.jp',
-    supportTitle: 'Still stuck?', supportDesc: 'Our support team can help right away, wherever you are in Okinawa.',
-    supportWhatsapp: 'Chat on LINE', supportEmail: 'Email support',
-  },
-  'zh-hant': {
-    okinawaBadge: 'OKINAWA',
-    heroTimeBadge: '約30秒完成',
-    heroTitle: 'eSIM 安裝指南',
-    heroSub: 'For Traveller to OKINAWA',
-    iosGuideBtn: 'iPhone 指南', androidGuideBtn: 'Android 指南',
-    checklistTitle: '開始之前',
-    checklist: ['您已連接 Wi-Fi 了嗎？', '您的手機支援 eSIM 嗎？', '您已開啟含有 QR Code 的確認信了嗎？'],
-    checkDeviceLink: '點此確認機型是否支援',
-    checklistNote: '建議抵達沖繩後再安裝。若在出發前安裝，可能因當地網路環境而導致掃描失敗。',
-    stepsTitle: '快速安裝步驟',
-    iosSteps: [
-      { title: '開啟含有 QR Code 的郵件', desc: '開啟確認信中的 QR Code。' },
-      { title: '透過快速安裝安裝 eSIM', desc: '點擊郵件中的快速安裝按鈕，安裝您的 eSIM。' },
-      { title: '前往「設定」>「行動網路」確認方案已新增', desc: '確認新的 eSIM 方案已新增。若方案名稱不易辨識，建議改為「沖繩eSIM」等名稱。', mockAddEsim: '行動網路 > eSIM 方案' },
-      { title: '抵達沖繩後，切換線路並開啟「數據漫遊」', desc: '抵達沖繩後，於行動網路中切換至沖繩用的 eSIM 方案，並務必開啟「數據漫遊」。', mockRoaming: '數據漫遊' },
-    ],
-    androidSteps: [
-      { title: '開啟含有 QR Code 的郵件', desc: '開啟確認信中的 QR Code。' },
-      { title: '透過快速安裝安裝 eSIM', desc: '點擊郵件中的快速安裝按鈕，安裝您的 eSIM。' },
-      { title: '前往「設定」>「網路和網際網路」>「SIM」確認方案已新增', desc: '確認新的 eSIM 方案已新增。若方案名稱不易辨識，建議改為「沖繩eSIM」等名稱。', mockAddEsim: '網路和網際網路 > SIM' },
-      { title: '抵達沖繩後，切換線路並開啟「漫遊」', desc: '抵達沖繩後，於 SIM 設定中切換至沖繩用的 eSIM 方案，並務必開啟「漫遊」。', mockRoaming: '漫遊' },
-    ],
-    faqTitle: '常見問題',
-    faq: [
-      { q: 'QR Code 無法掃描', a: '請調高螢幕亮度，並確保整個 QR Code 都在相機框內。若仍無法掃描，可使用上方按鈕重新顯示。' },
-      { q: '顯示「已安裝」', a: '每個 QR Code 僅能使用一次。若嘗試重複安裝會顯示此訊息。若已能連線，則無需再進行任何操作。' },
-    ],
-    apnWarningTitle: '已安裝卻無法連上網路？',
-    apnIntro: '少數情況下，快速安裝可能會自動設定錯誤的連線設定，稱為 APN。APN 是手機連接電信商網路所需的設定值。',
-    apnSteps: '前往「設定」>「行動網路」> 您的 eSIM 方案 > APN，輸入以下數值。',
-    apnValueLabel: 'Android 專用 APN 數值', apnValueAndroid: 'vmobile.jp',
-    supportTitle: '問題還沒解決？', supportDesc: '無論您在沖繩何處，我們的客服團隊都會立即為您協助。',
-    supportWhatsapp: '透過 LINE 聯絡', supportEmail: '透過電子郵件聯絡',
-  },
-  ko: {
-    okinawaBadge: 'OKINAWA',
-    heroTimeBadge: '약 30초 소요',
-    heroTitle: 'eSIM 설치 가이드',
-    heroSub: 'For Traveller to OKINAWA',
-    iosGuideBtn: 'iPhone 가이드', androidGuideBtn: 'Android 가이드',
-    checklistTitle: '시작하기 전에',
-    checklist: ['Wi-Fi에 연결되어 있나요?', '사용 중인 기기가 eSIM을 지원하나요?', 'QR 코드가 담긴 확인 메일을 열어두셨나요?'],
-    checkDeviceLink: '여기서 기기 지원 여부 확인하기',
-    checklistNote: '오키나와 도착 후 설치하는 것을 권장합니다. 출발 전에 설치하면 현지 네트워크 환경으로 인해 스캔이 실패할 수 있습니다.',
-    stepsTitle: '빠른 설치 절차',
-    iosSteps: [
-      { title: 'QR 코드가 담긴 메일 열기', desc: '확인 메일에 있는 QR 코드를 엽니다.' },
-      { title: '빠른 설치로 eSIM 설치하기', desc: '메일 속 빠른 설치 버튼을 눌러 eSIM을 설치합니다.' },
-      { title: '설정 > 셀룰러에서 요금제 추가 확인', desc: '새 eSIM 요금제가 추가되었는지 확인하세요. 요금제 이름이 알아보기 어렵다면 "오키나와 eSIM" 등으로 변경하는 것을 추천합니다.', mockAddEsim: '셀룰러 > eSIM 요금제' },
-      { title: '오키나와 도착 후 회선 전환 및 데이터 로밍 켜기', desc: '오키나와에 도착하면 셀룰러에서 오키나와용 eSIM 요금제로 전환하고, 데이터 로밍을 반드시 켜주세요.', mockRoaming: '데이터 로밍' },
-    ],
-    androidSteps: [
-      { title: 'QR 코드가 담긴 메일 열기', desc: '확인 메일에 있는 QR 코드를 엽니다.' },
-      { title: '빠른 설치로 eSIM 설치하기', desc: '메일 속 빠른 설치 버튼을 눌러 eSIM을 설치합니다.' },
-      { title: '설정 > 네트워크 및 인터넷 > SIM에서 요금제 추가 확인', desc: '새 eSIM 요금제가 추가되었는지 확인하세요. 요금제 이름이 알아보기 어렵다면 "오키나와 eSIM" 등으로 변경하는 것을 추천합니다.', mockAddEsim: '네트워크 및 인터넷 > SIM' },
-      { title: '오키나와 도착 후 회선 전환 및 로밍 켜기', desc: '오키나와에 도착하면 SIM 설정에서 오키나와용 eSIM 요금제로 전환하고, 로밍을 반드시 켜주세요.', mockRoaming: '로밍' },
-    ],
-    faqTitle: '자주 묻는 질문',
-    faq: [
-      { q: 'QR 코드가 스캔되지 않아요', a: '화면 밝기를 높이고 QR 코드 전체가 카메라 프레임 안에 들어오도록 하세요. 그래도 안 되면 위 버튼으로 다시 표시할 수 있습니다.' },
-      { q: '"이미 설치됨"이라고 표시돼요', a: 'QR 코드는 한 번만 사용할 수 있습니다. 다시 설치를 시도하면 이 메시지가 표시됩니다. 이미 연결되어 있다면 그대로 사용하시면 됩니다.' },
-    ],
-    apnWarningTitle: '설치는 됐는데 인터넷이 안 되나요?',
-    apnIntro: '드물게 빠른 설치 후 APN이라는 접속 설정이 잘못 지정되는 경우가 있습니다. APN은 휴대폰이 통신사 네트워크에 접속하기 위한 설정값입니다.',
-    apnSteps: '설정 > 셀룰러 > 해당 eSIM 요금제 > APN으로 이동해 아래 값을 입력하세요.',
-    apnValueLabel: 'Android용 APN 값', apnValueAndroid: 'vmobile.jp',
-    supportTitle: '그래도 해결되지 않나요?', supportDesc: '오키나와 어디에 계시든 고객지원팀이 바로 도와드립니다.',
-    supportWhatsapp: 'LINE으로 문의', supportEmail: '이메일로 문의',
-  },
-};
-
-class Component extends DCLogic {
-  state = { lang: 'ja', os: 'ios', langMenuOpen: false, navMenuOpen: false, openFaqIndex: 0 };
-
-  componentDidMount() { this.icons(); }
-  componentDidUpdate() { this.icons(); }
-  icons() { if (window.lucide) window.lucide.createIcons(); }
-
-  renderVals() {
-    const lang = this.state.lang;
-    const t = CONTENT[lang];
-    const langs = LANGS.map(l => ({
-      code: l.code, label: l.label,
-      menuStyle: `padding:11px 16px;font-size:var(--text-sm);cursor:pointer;color:${l.code === lang ? 'var(--brand-brown)' : 'var(--text-primary)'};font-weight:${l.code === lang ? '700' : '400'};background:${l.code === lang ? 'var(--cream-100)' : 'transparent'};`,
-      onSelect: () => this.setState({ lang: l.code, langMenuOpen: false }),
-    }));
-    const osIsAndroid = this.state.os === 'android';
-    const rawSteps = osIsAndroid ? t.androidSteps : t.iosSteps;
-    const steps = rawSteps.map((s, i) => {
-      const meta = STEP_META[i];
-      const mockLabel = meta.mockKey ? s[meta.mockKey] : null;
-      const bg = meta.warn ? 'var(--danger)' : 'var(--brand-brown)';
-      return {
-        n: i + 1,
-        title: s.title, desc: s.desc,
-        mock: mockLabel ? { icon: meta.icon, label: mockLabel } : null,
-        hasNext: i < rawSteps.length - 1,
-        circleStyle: `width:36px;height:36px;border-radius:50%;background:${bg};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:var(--text-sm);flex-shrink:0;`,
-      };
-    });
-    const faqItems = t.faq.map((item, i) => ({
-      q: item.q, a: item.a,
-      open: this.state.openFaqIndex === i,
-      chevronIcon: this.state.openFaqIndex === i ? 'chevron-up' : 'chevron-down',
-      onToggle: () => this.setState(s => ({ openFaqIndex: s.openFaqIndex === i ? null : i })),
-    }));
-    const goSection = (os) => { this.setState({ os }); requestAnimationFrame(() => { const el = document.getElementById('install-steps'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); }); };
-    return {
-      langs, t, steps, osIsAndroid, faqItems,
-      iosTabBg: osIsAndroid ? 'transparent' : 'var(--brand-brown)',
-      iosTabColor: osIsAndroid ? 'var(--text-secondary)' : '#fff',
-      androidTabBg: osIsAndroid ? 'var(--brand-brown)' : 'transparent',
-      androidTabColor: osIsAndroid ? '#fff' : 'var(--text-secondary)',
-      iosJumpBg: osIsAndroid ? 'transparent' : 'var(--brand-brown)',
-      iosJumpColor: osIsAndroid ? 'var(--brand-brown)' : '#fff',
-      androidJumpBg: osIsAndroid ? 'var(--brand-brown)' : 'transparent',
-      androidJumpColor: osIsAndroid ? '#fff' : 'var(--brand-brown)',
-      setIos: () => this.setState({ os: 'ios' }),
-      setAndroid: () => this.setState({ os: 'android' }),
-      goIosSteps: () => goSection('ios'),
-      goAndroidSteps: () => goSection('android'),
-      langMenuOpen: this.state.langMenuOpen,
-      toggleLangMenu: () => this.setState(s => ({ langMenuOpen: !s.langMenuOpen, navMenuOpen: false })),
-      navMenuOpen: this.state.navMenuOpen,
-      toggleNavMenu: () => this.setState(s => ({ navMenuOpen: !s.navMenuOpen, langMenuOpen: false }), () => { if (window.lucide) window.lucide.createIcons(); }),
-      navItems: (() => {
-        const L = {
-          ja: ['インストールガイド', 'eSIM対応チェック', 'データ使用量の確認'],
-          en: ['Installation Guide', 'Check eSIM Support', 'Check Data Usage'],
-          'zh-hant': ['安裝指南', '確認 eSIM 支援', '查看數據用量'],
-          ko: ['설치 가이드', 'eSIM 지원 확인', '데이터 사용량 확인'],
-        }[this.state.lang] || [];
-        return [
-          { key: 'install', href: 'TabiSIM Install Guide.dc.html', icon: 'download' },
-          { key: 'check', href: 'TabiSIM Compatibility Checker.dc.html', icon: 'smartphone' },
-          { key: 'usage', href: 'TabiSIM Data Usage Guide.dc.html', icon: 'bar-chart-3' },
-        ].map((n, i) => ({
-          ...n, label: L[i], current: n.key === 'install',
-          style: `display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--radius-md);font-size:var(--text-sm);text-decoration:none;color:var(--text-primary);font-weight:${n.key === 'install' ? '700' : '500'};background:${n.key === 'install' ? 'var(--cream-100)' : 'transparent'};`,
-        }));
-      })(),
-
-      lineIcon: React.createElement('i', { 'data-lucide': 'message-circle', style: { width: '16px', height: '16px' } }),
-      mailIcon: React.createElement('i', { 'data-lucide': 'mail', style: { width: '16px', height: '16px' } }),
-    };
+<script>
+  function selectOS(os){
+    document.getElementById('tab-ios').setAttribute('aria-selected', os==='ios');
+    document.getElementById('tab-android').setAttribute('aria-selected', os==='android');
+    document.getElementById('panel-ios').classList.toggle('active', os==='ios');
+    document.getElementById('panel-android').classList.toggle('active', os==='android');
+    try{ localStorage.setItem('tabisim-os', os); }catch(e){}
   }
-}
 
+  function selectMaker(maker, btn){
+    var group = btn.closest('.subtabs');
+    group.querySelectorAll('button').forEach(function(b){ b.setAttribute('aria-selected', b === btn); });
+    var panelRoot = btn.closest('#panel-android');
+    panelRoot.querySelectorAll('.maker-panel').forEach(function(p){
+      p.hidden = p.getAttribute('data-maker') !== maker;
+    });
+    try{ localStorage.setItem('tabisim-maker', maker); }catch(e){}
+  }
+
+  (function restoreSelection(){
+    try{
+      var os = localStorage.getItem('tabisim-os');
+      if (os === 'android') selectOS('android');
+      var maker = localStorage.getItem('tabisim-maker');
+      if (maker){
+        var btn = document.querySelector('.subtabs button[onclick*="\'' + maker + '\'"]');
+        if (btn) selectMaker(maker, btn);
+      }
+    }catch(e){}
+  })();
+
+  function initCarousels(){
+    document.querySelectorAll('[data-carousel]').forEach(function(track){
+      var viewport = track.closest('.shot-viewport');
+      var dots = viewport ? viewport.nextElementSibling : null;
+      if (!dots || !dots.classList.contains('shot-dots')) return;
+      var group = viewport.parentElement;
+      var badge = group.querySelector('[data-step-badge]');
+      var label = group.querySelector('[data-step-label]');
+      var steps = [];
+      try{ steps = JSON.parse(track.getAttribute('data-steps') || '[]'); }catch(e){}
+      var slides = track.querySelectorAll('.shot-slide');
+      dots.innerHTML = '';
+      slides.forEach(function(_, i){
+        var d = document.createElement('span');
+        if (i === 0) d.classList.add('active');
+        dots.appendChild(d);
+      });
+      var dotEls = dots.querySelectorAll('span');
+      function setIndex(idx){
+        idx = Math.max(0, Math.min(idx, dotEls.length - 1));
+        dotEls.forEach(function(d, i){ d.classList.toggle('active', i === idx); });
+        if (badge) badge.textContent = idx + 1;
+        if (label && steps[idx]) label.textContent = steps[idx];
+      }
+      var ticking = false;
+      track.addEventListener('scroll', function(){
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function(){
+          var slideW = slides[0].getBoundingClientRect().width + 14;
+          var idx = Math.round(track.scrollLeft / slideW);
+          setIndex(idx);
+          ticking = false;
+        });
+      }, { passive: true });
+    });
+  }
+  initCarousels();
+
+  function navCarousel(btn, dir){
+    var viewport = btn.closest('.shot-viewport');
+    var track = viewport.querySelector('[data-carousel]');
+    var slideW = track.querySelector('.shot-slide').getBoundingClientRect().width + 14;
+    track.scrollBy({ left: dir * slideW, behavior: 'smooth' });
+  }
+
+  function sendFeedback(helpful, btn){
+    var box = document.getElementById('feedback');
+    var text = document.getElementById('feedback-text');
+    box.querySelectorAll('.fb-btn').forEach(function(b){ b.classList.remove('picked'); b.disabled = true; });
+    btn.classList.add('picked');
+    box.classList.add('done');
+    var t = I18N[currentLang] || I18N.ja;
+    text.removeAttribute('data-i18n');
+    text.textContent = helpful ? t['feedback.yes'] : t['feedback.no'];
+    try{
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'support_page_feedback', page: 'data-usage-guide', helpful: helpful });
+    }catch(e){}
+  }
+
+  function toggleFaq(btn){
+    var expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!expanded));
+    var answer = btn.nextElementSibling;
+    var inner = answer.querySelector('.faq-a-inner');
+    answer.style.maxHeight = expanded ? '0px' : (inner.scrollHeight + 20) + 'px';
+  }
+
+  function toggleDropdown(id, trigger){
+    var panel = document.getElementById(id);
+    var isOpen = panel.classList.contains('open');
+    document.querySelectorAll('.dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+    document.querySelectorAll('.icon-btn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+    if (!isOpen){
+      panel.classList.add('open');
+      trigger.setAttribute('aria-expanded','true');
+    }
+  }
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('.top-actions')){
+      document.querySelectorAll('.dropdown.open').forEach(function(d){ d.classList.remove('open'); });
+      document.querySelectorAll('.icon-btn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+    }
+  });
+
+  /* ---------- i18n ---------- */
+  var I18N = {
+    ja: {
+      title: 'データ使用量ガイド',
+      'header.menuInstall': 'インストールガイド',
+      'header.menuCheck': '対応機種チェッカー',
+      'header.menuCurrent': 'データ使用量ガイド',
+      'hero.title': 'データ使用量の確認方法',
+      'hero.desc': '残りのデータ量は、スマホの設定画面からいつでも確認できます。',
+      'section1.title': 'データ残量を確認する',
+      'deviceNote': '上記2機種以外をお使いの場合も、「接続」または「ネットワークとインターネット」の中に「データ使用量」に近い項目があります。見つからない場合はサポートまでご連絡ください。',
+      'warning.title': '渡航前に、データ使用量をリセットしておきましょう',
+      'warning.desc': '他の回線の分と合算表示されるのを防げます（iOSは上のSTEP3）。',
+      'faq1.q': '表示されている残量が、実際の使用感と合わない気がします',
+      'faq1.a': '数分ほど遅れて反映されることがあります。少し時間を置いてから確認してください。',
+      'faq2.q': '「データ使用量」の項目が見当たりません',
+      'faq2.a': '機種により名称が異なります。見つからない場合はサポートまでご連絡ください。',
+      'divider': 'データが足りなくなったら',
+      'topup.title': 'eSIMにそのままデータを追加',
+      'topup.desc': 'Top-up（追加チャージ）は、tabisim.jpでプランを購入した方のみご利用いただけます。',
+      'topup.cta': '日本向けプランを見る',
+      'support.title': 'それでも解決しない場合',
+      'line.cta': 'LINE公式アカウントを追加',
+      'feedback.q': 'このページは役に立ちましたか？',
+      'feedback.yes': 'ありがとうございます。',
+      'feedback.no': 'ご意見ありがとうございます。サポートまでご連絡ください。',
+      'aria.langSelect': '言語を選択',
+      'aria.menu': 'メニュー',
+      'aria.prev': '前の手順',
+      'aria.next': '次の手順',
+      'aria.helpful': '役に立った',
+      'aria.notHelpful': '役に立たなかった'
+    },
+    en: {
+      title: 'Data Usage Guide',
+      'header.menuInstall': 'Installation Guide',
+      'header.menuCheck': 'Compatibility Checker',
+      'header.menuCurrent': 'Data Usage Guide',
+      'hero.title': 'How to check your data usage',
+      'hero.desc': "You can check your remaining data anytime from your phone's settings.",
+      'section1.title': 'Check your remaining data',
+      'deviceNote': "If you use another device, look for a similar item under “Connections” or “Network & internet”. Contact support if you can't find it.",
+      'warning.title': 'Reset your data usage before you travel',
+      'warning.desc': 'This keeps it from being combined with other lines (iOS: see STEP 3 above).',
+      'faq1.q': "The usage shown doesn't match what I expect",
+      'faq1.a': 'It can take a few minutes to update. Please check again after a short while.',
+      'faq2.q': 'I can’t find the “Data usage” item',
+      'faq2.a': "The name may vary by device. Please contact support if you still can't find it.",
+      'divider': 'If you run out of data',
+      'topup.title': 'Add data straight to your eSIM',
+      'topup.desc': 'Top-up is available only for customers who purchased a plan on tabisim.jp.',
+      'topup.cta': 'View Japan plans',
+      'support.title': 'Still need help?',
+      'line.cta': 'Add our LINE Official Account',
+      'feedback.q': 'Was this page helpful?',
+      'feedback.yes': 'Thank you!',
+      'feedback.no': 'Thanks for the feedback. Please contact support.',
+      'aria.langSelect': 'Select language',
+      'aria.menu': 'Menu',
+      'aria.prev': 'Previous step',
+      'aria.next': 'Next step',
+      'aria.helpful': 'Helpful',
+      'aria.notHelpful': 'Not helpful'
+    },
+    'zh-hant': {
+      title: '數據用量指南',
+      'header.menuInstall': '安裝指南',
+      'header.menuCheck': '相容機型檢查器',
+      'header.menuCurrent': '數據用量指南',
+      'hero.title': '如何查詢數據用量',
+      'hero.desc': '您可以隨時從手機的設定畫面查看剩餘的數據用量。',
+      'section1.title': '查詢剩餘數據量',
+      'deviceNote': '若您使用其他機型，也可以在「連線」或「網路和網際網路」中找到類似的「數據使用量」項目。若找不到，請聯絡客服。',
+      'warning.title': '出發前建議重設數據使用量',
+      'warning.desc': '可避免與其他門號的用量合併顯示（iOS 請參考上方 STEP3）。',
+      'faq1.q': '顯示的用量與實際使用感覺不符',
+      'faq1.a': '數據可能會廲遲幾分鐘才更新，請稍後再確認。',
+      'faq2.q': '找不到「數據使用量」選項',
+      'faq2.a': '不同機型名稱可能不同，若仍找不到請聯絡客服。',
+      'divider': '數據用量不足時',
+      'topup.title': '直接為 eSIM 加購數據',
+      'topup.desc': '加值（Top-up）僅限於在 tabisim.jp 購買方案的顧客使用。',
+      'topup.cta': '查看日本方案',
+      'support.title': '仍未解決問題？',
+      'line.cta': '加入 LINE 官方帳號',
+      'feedback.q': '這個頁面對您有幫助嗎？',
+      'feedback.yes': '謝謝您的回饋！',
+      'feedback.no': '感謝您的意見，請聯絡客服。',
+      'aria.langSelect': '選擇語言',
+      'aria.menu': '選單',
+      'aria.prev': '上一步',
+      'aria.next': '下一步',
+      'aria.helpful': '有幫助',
+      'aria.notHelpful': '沒幫助'
+    },
+    ko: {
+      title: '데이터 사용량 가이드',
+      'header.menuInstall': '설치 가이드',
+      'header.menuCheck': '기기 호환성 확인',
+      'header.menuCurrent': '데이터 사용량 가이드',
+      'hero.title': '데이터 사용량 확인 방법',
+      'hero.desc': '남은 데이터 용량은 스마트폰 설정 화면에서 언제든지 확인할 수 있습니다.',
+      'section1.title': '데이터 잔량 확인하기',
+      'deviceNote': '다른 기기를 사용 중이시라면 \'연결\' 또는 \'네트워크 및 인터넷\'에서 비슷한 항목을 확인하세요. 찾을 수 없다면 고객센터로 문의해 주세요.',
+      'warning.title': '여행 전에 데이터 사용량을 초기화해두세요',
+      'warning.desc': '다른 회선과 합산 표시되는 것을 방지할 수 있습니다 (iOS는 위 STEP3 참고).',
+      'faq1.q': '표시된 사용량이 실제 체감과 다른 것 같아요',
+      'faq1.a': '반영까지 몇 분 정도 지연될 수 있습니다. 잠시 후 다시 확인해 주세요.',
+      'faq2.q': "'데이터 사용량' 항목을 찾을 수 없어요",
+      'faq2.a': '기기에 따라 명칭이 다를 수 있습니다. 찾을 수 없다면 고객센터로 문의해 주세요.',
+      'divider': '데이터가 부족할 때',
+      'topup.title': 'eSIM에 바로 데이터 추가',
+      'topup.desc': 'Top-up(추가 충전)은 tabisim.jp에서 요금제를 구매하신 분만 이용하실 수 있습니다.',
+      'topup.cta': '일본 요금제 보기',
+      'support.title': '그래도 해결되지 않으신다면',
+      'line.cta': 'LINE 공식 계정 추가하기',
+      'feedback.q': '이 페이지가 도움이 되었나요?',
+      'feedback.yes': '감사합니다!',
+      'feedback.no': '의견 감사합니다. 고객센터로 문의해 주세요.',
+      'aria.langSelect': '언어 선택',
+      'aria.menu': '메뉴',
+      'aria.prev': '이전 단계',
+      'aria.next': '다음 단계',
+      'aria.helpful': '도움될',
+      'aria.notHelpful': '도움 안됨'
+    }
+  };
+
+  var STEP_I18N = {
+    ios: {
+      ja: ['Cellular（モバイル通信）をタップ','Current Period（現在の期間）で使用量を確認','Reset Statistics（統計をリセット）で渡航前にリセット'],
+      en: ['Tap Cellular','Check usage under Current Period','Reset before travel with Reset Statistics'],
+      'zh-hant': ['點選 Cellular（行動網路）','在 Current Period（目前週期）中查看用量','出發前請用 Reset Statistics（重設統計）重設'],
+      ko: ['Cellular(모바일 데이터)를 탭하세요','Current Period(현재 기간)에서 사용량 확인','여행 전 Reset Statistics(통계 재설정)으로 초기화']
+    },
+    samsung: {
+      ja: ['Connections（接続）をタップ','Data usage（データ使用量）をタップ','Mobile data usage（モバイルデータ使用量）を確認'],
+      en: ['Tap Connections','Tap Data usage','Check Mobile data usage'],
+      'zh-hant': ['點選 Connections（連線）','點選 Data usage（數據使用量）','查看 Mobile data usage（行動數據使用量）'],
+      ko: ['Connections(연결)를 탭하세요','Data usage(데이터 사용량)를 탭하세요','Mobile data usage(모바일 데이터 사용량) 확인']
+    },
+    pixel: {
+      ja: ['Network & internet（ネットワーク）をタップ','SIMs をタップ','使用データ量を確認'],
+      en: ['Tap Network & internet','Tap SIMs','Check your data usage'],
+      'zh-hant': ['點選 Network & internet（網路）','點選 SIMs','查看數據使用量'],
+      ko: ['Network & internet(네트워크)를 탭하세요','SIMs를 탭하세요','데이터 사용량 확인']
+    }
+  };
+
+  var HTML_LANG = { ja:'ja', en:'en', 'zh-hant':'zh-Hant', ko:'ko' };
+  var currentLang = 'ja';
+
+  function refreshCarouselStep(track){
+    var viewport = track.closest('.shot-viewport');
+    var dots = viewport ? viewport.nextElementSibling : null;
+    var group = viewport ? viewport.parentElement : null;
+    if (!group) return;
+    var badge = group.querySelector('[data-step-badge]');
+    var label = group.querySelector('[data-step-label]');
+    var idx = 0;
+    if (dots){
+      var active = dots.querySelector('span.active');
+      var all = dots.querySelectorAll('span');
+      if (active) idx = Array.prototype.indexOf.call(all, active);
+    }
+    var steps = [];
+    try{ steps = JSON.parse(track.getAttribute('data-steps') || '[]'); }catch(e){}
+    if (badge) badge.textContent = idx + 1;
+    if (label && steps[idx]) label.textContent = steps[idx];
+  }
+
+  function applyLanguage(lang){
+    if (!I18N[lang]) lang = 'ja';
+    currentLang = lang;
+    var dict = I18N[lang];
+
+    document.documentElement.lang = HTML_LANG[lang] || 'ja';
+    document.title = dict.title;
+
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-aria');
+      if (dict[key]) el.setAttribute('aria-label', dict[key]);
+    });
+
+    document.querySelectorAll('[data-carousel]').forEach(function(track){
+      var id = track.getAttribute('data-carousel');
+      var stepSet = STEP_I18N[id];
+      if (!stepSet) return;
+      var steps = stepSet[lang] || stepSet.ja;
+      track.setAttribute('data-steps', JSON.stringify(steps));
+      refreshCarouselStep(track);
+    });
+
+    document.querySelectorAll('#lang-dropdown button').forEach(function(btn){
+      var isCurrent = btn.getAttribute('data-lang') === lang;
+      if (isCurrent) btn.setAttribute('aria-current', 'true');
+      else btn.removeAttribute('aria-current');
+    });
+
+    try{ localStorage.setItem('tabisim-lang', lang); }catch(e){}
+  }
+
+  document.querySelectorAll('#lang-dropdown button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      applyLanguage(btn.getAttribute('data-lang'));
+      document.getElementById('lang-dropdown').classList.remove('open');
+    });
+  });
+
+  (function initLanguage(){
+    var saved = 'ja';
+    try{ saved = localStorage.getItem('tabisim-lang') || 'ja'; }catch(e){}
+    applyLanguage(saved);
+  })();
 </script>
 </body>
 </html>
